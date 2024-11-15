@@ -1,2 +1,5 @@
-# Adobe-GenP
-GenP Chinese L10n | GenP 汉化版
+Adobe GenP v3.4.2
+
+CGP Version
+
+From: https://www.cybermania.ws/apps/genp
