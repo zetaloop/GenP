@@ -1,0 +1,37 @@
+To compile GenP...
+
+Confirm your compilation directory listing looks something like this:
+```
+|   config.ini
+|   GenP-3.4.14.1.au3
+|   NSudoLG.exe
+|
+\---ICONS
+        Logo.ico
+```
+
+Then, follow these steps carefully to set-up your development environment:
+- Download [AutoIt](https://www.autoitscript.com/cgi-bin/getfile.pl?autoit3/autoit-v3-setup.zip)
+ - Run the downloaded installer and follow the instructions.
+- Download [AutoIt Script Editor](https://www.autoitscript.com/cgi-bin/getfile.pl?../autoit3/scite/download/SciTE4AutoIt3.exe)
+ - Run the downloaded installer and follow the instructions.
+- Restart your computer.
+
+Afterwards, you should see a 'Compile with Options' selection within your context menu when right-clicking GenP's AutoIt v3 Script file.
+Select this option whenever you wish to compile GenP, and press 'Compile Script' within the interface that appears to generate the executable file.
+
+If the interface just disappears without generating an executable within the compilation directory, you have an error in your code.
+Debug it within the AutoIt Script Editor, then try again.
+Never use the 'Compile Script (x**)' options, as they will not produce a complete compilation.
+
+You can delete the outputted stripped/minified source code once compilation finishes. You only need the executable file.
+Support will not be granted to users trying to modify the source code. The source code is provided for those who wish to validate the authenticity and safety of GenP's binaries.
+
+If all else fails, set-up a clean Windows 10 machine and try compiling from there.
+You may have some corruption in your operating system preventing AutoIt from working properly.
+
+If you still do not trust GenP after all of this (or cannot be bothered to check the source code), you can always generate the patched binaries in a virtual machine, and compare them with the unpatched files using a hex comparison tool such as [HexCmp](http://www.fairdell.com/hexcmp/HexCmp2_Setup.zip).
+You will see that there are no added sections or anything malicious, just the bare minimum modified bytes to make everything work properly.
+
+... and if you still don't trust us after that, you can use this [alternative method](https://www.adobe.com/creativecloud/plans.html).
+We hope this clears up any confusion.
