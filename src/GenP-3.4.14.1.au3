@@ -29,7 +29,7 @@
 
 AutoItSetOption("GUICloseOnESC", 0)  ;1=ESC closes, 0=ESC won't close
 
-Global Const $g_AppWndTitle = "GenP v3.4.14.1", $g_AppVersion = "Original version by uncia/CGP - GenP Community Edition - v3.4.14.1"
+Global Const $g_AppWndTitle = "GenP v3.4.14.1", $g_AppVersion = "原版作者 uncia/CGP - GenP 社区版 - v3.4.14.1"
 
 If _Singleton($g_AppWndTitle, 1) = 0 Then
 	Exit
@@ -59,7 +59,7 @@ FileInstall("NSudoLG.exe", @TempDir & "\NSudoLG.exe", 1)
 Local $sNSudoLGPath = @TempDir & "\NSudoLG.exe"
 
 If Not (@UserName = "SYSTEM") And FileExists($sNSudoLGPath) Then
-	Local $iAnswer = MsgBox(4, "TrustedInstaller", "Do you wish to elevate GenP to TrustedInstaller to allow for patching of XD/UWP apps? Do not use this option if you encounter any issues, it is experimental!")
+	Local $iAnswer = MsgBox(4, "TrustedInstaller", "是否授予 TrustedInstaller 权限以修补 XD 与 UWP 应用？注意这是实验性功能，如果遇到问题请不要启用！")
 	If $iAnswer = 6 Then
 		Exit Run($sNSudoLGPath & ' -U:T -P:E -M:S "' & @ScriptFullPath & '"')
 	EndIf
@@ -124,7 +124,7 @@ While 1
 		Case $idMsg = $idButtonStop
 			$ListViewSelectFlag = 0   ; Set Flag to Deselected State
 			FillListViewWithInfo()
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Waiting for user action.")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作.")
 			GUICtrlSetState($idButtonStop, $GUI_HIDE)
 			GUICtrlSetState($idButtonSearch, $GUI_SHOW)
 			GUICtrlSetState($idButtonSearch, 64)
@@ -156,19 +156,19 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 			_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
-			_GUICtrlListView_AddSubItem($idListview, 1, "Preparing...", 1)
+			_GUICtrlListView_AddSubItem($idListview, 1, "准备中...", 1)
 			_GUICtrlListView_AddSubItem($idListview, 2, "", 1)
-			_GUICtrlListView_AddSubItem($idListview, 3, "Be patient, please.", 1)
+			_GUICtrlListView_AddSubItem($idListview, 3, "请耐心等待.", 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 0, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 1, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 2, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 3, 1)
 
 			_Expand_All_Click()
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 
 			; Clear previous results
@@ -291,13 +291,13 @@ While 1
 			ElseIf FileExists("C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\AppsPanel\AppsPanelBL.dll") Then
 				$appsPanelFile = "C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\AppsPanel\AppsPanelBL.dll"
 			Else
-				$appsPanelFile = FileOpenDialog("Select a File", @ScriptDir, "AppsPanelBL.dll (AppsPanelBL.dll)")
+				$appsPanelFile = FileOpenDialog("请选择文件", @ScriptDir, "AppsPanelBL.dll (AppsPanelBL.dll)")
 			EndIf
 			ProgressWrite(0)
 			If FileExists($appsPanelFile) Then
 				MyGlobalPatternSearch($appsPanelFile)
 				Sleep(100)
-				MemoWrite(@CRLF & "File Path:" & @CRLF & "" & @CRLF & $appsPanelFile & @CRLF & "" & @CRLF & "")
+				MemoWrite(@CRLF & "文件路径:" & @CRLF & "" & @CRLF & $appsPanelFile & @CRLF & "" & @CRLF & "")
 				Sleep(100)
 				MyGlobalPatternPatch($appsPanelFile, $aOutHexGlobalArray)
 				Sleep(500)
@@ -309,13 +309,13 @@ While 1
 				ElseIf FileExists("C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\ADS\ContainerBL.dll") Then
 					$containerBLFile = "C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\ADS\ContainerBL.dll"
 				Else
-					$containerBLFile = FileOpenDialog("Select a File", @ScriptDir, "ContainerBL.dll (ContainerBL.dll)")
+					$containerBLFile = FileOpenDialog("请选择文件", @ScriptDir, "ContainerBL.dll (ContainerBL.dll)")
 				EndIf
 				ProgressWrite(0)
 				If FileExists($containerBLFile) Then
 					MyGlobalPatternSearch($containerBLFile)
 					Sleep(100)
-					MemoWrite(@CRLF & "File Path:" & @CRLF & "" & @CRLF & $containerBLFile & @CRLF & "" & @CRLF & "")
+					MemoWrite(@CRLF & "文件路径:" & @CRLF & "" & @CRLF & $containerBLFile & @CRLF & "" & @CRLF & "")
 					Sleep(100)
 					MyGlobalPatternPatch($containerBLFile, $aOutHexGlobalArray)
 					Sleep(500)
@@ -326,21 +326,21 @@ While 1
 				ElseIf FileExists("C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\ADS\Adobe Desktop Service.exe") Then
 					$adobeDesktopServiceFile = "C:\Program Files (x86)\Common Files\Adobe\Adobe Desktop Common\ADS\Adobe Desktop Service.exe"
 				Else
-					$adobeDesktopServiceFile = FileOpenDialog("Select a File", @ScriptDir, "Adobe Desktop Service.exe (Adobe Desktop Service.exe)")
+					$adobeDesktopServiceFile = FileOpenDialog("请选择文件", @ScriptDir, "Adobe Desktop Service.exe (Adobe Desktop Service.exe)")
 				EndIf
 				If FileExists($adobeDesktopServiceFile) Then
 					MyGlobalPatternSearch($adobeDesktopServiceFile)
 					Sleep(100)
-					MemoWrite(@CRLF & "File Path:" & @CRLF & "" & @CRLF & $adobeDesktopServiceFile & @CRLF & "" & @CRLF & "")
+					MemoWrite(@CRLF & "文件路径:" & @CRLF & "" & @CRLF & $adobeDesktopServiceFile & @CRLF & "" & @CRLF & "")
 					Sleep(100)
 					MyGlobalPatternPatch($adobeDesktopServiceFile, $aOutHexGlobalArray)
 					Sleep(500)
 				EndIf
 				ProgressWrite(0)
-				MemoWrite(@CRLF & "All files patched." & @CRLF & "" & @CRLF & "")
+				MemoWrite(@CRLF & "所有文件均已修补完成." & @CRLF & "" & @CRLF & "")
 			Else
 				ProgressWrite(0)
-				MemoWrite(@CRLF & "Creative Cloud patching aborted due to unsupported architecture." & @CRLF & "" & @CRLF & "")
+				MemoWrite(@CRLF & "终止修补 Creative Cloud，因为架构不支持." & @CRLF & "" & @CRLF & "")
 				$bFoundCCARM = False
 			EndIf
 			GUICtrlSetState($idBtnDeselectAll, 64)
@@ -374,7 +374,7 @@ While 1
 					MyGlobalPatternSearch($ItemFromList)
 					ProgressWrite(0)
 					Sleep(100)
-					MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "medication :)")
+					MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "开始用药 :)")
 					LogWrite(1, $ItemFromList)
 					Sleep(100)
 
@@ -397,9 +397,9 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 			GUICtrlSetState($idListview, 64)
 			GUICtrlSetState($idButtonSearch, 64)
 			GUICtrlSetState($idButtonCustomFolder, 64)
@@ -412,23 +412,23 @@ While 1
 			FillListViewWithInfo()
 
 			If $bFoundAcro32 = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "GenP does not patch the x86 version of Acrobat. Please use the x64 version of Acrobat.")
-				LogWrite(1, "GenP does not patch the x86 version of Acrobat. Please use the x64 version of Acrobat.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 x86 版本的 Acrobat，请用 x64 版本.")
+				LogWrite(1, "GenP 不支持 x86 版本的 Acrobat，请用 x64 版本.")
 			EndIf
 
 			If $bFoundLrARM = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "GenP does not patch the ARM version of Lightroom. Please use the x64 version of Lightroom.")
-				LogWrite(1, "GenP does not patch the ARM version of Lightroom. Please use the x64 version of Lightroom.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 ARM 版本的 Lightroom，请用 x64 版本.")
+				LogWrite(1, "GenP 不支持 ARM 版本的 Lightroom，请用 x64 版本.")
 			EndIf
 
 			If $bFoundPsARM = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "GenP does not patch the ARM version of Photoshop. Please use the x64 version of Photoshop.")
-				LogWrite(1, "GenP does not patch the ARM version of Photoshop. Please use the x64 version of Photoshop.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 ARM 版本的 Photoshop，请用 x64 版本.")
+				LogWrite(1, "GenP 不支持 ARM 版本的 Photoshop，请用 x64 版本.")
 			EndIf
 
 			If $bFoundGenericARM = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "GenP cannot patch files with ARM architecture.")
-				LogWrite(1, "GenP cannot patch files with ARM architecture.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 ARM 架构的软件.")
+				LogWrite(1, "GenP 不支持 ARM 架构的软件.")
 			EndIf
 
 			ToggleLog(1)
@@ -436,7 +436,7 @@ While 1
 			GUICtrlSetState($hLogTab, $GUI_SHOW)
 
 		Case $idMsg = $idBtnRestore
-			GUICtrlSetData($idLog, "Activity Log" & @CRLF)
+			GUICtrlSetData($idLog, "激活日志" & @CRLF)
 			ToggleLog(0)
 			GUICtrlSetState($idListview, 128)
 			GUICtrlSetState($idBtnDeselectAll, 128)
@@ -464,7 +464,7 @@ While 1
 
 					ProgressWrite($iProgress)
 					Sleep(100)
-					MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "restoring :)")
+					MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "正在恢复 :)")
 					Sleep(100)
 
 					; Scroll control 10 pixels - 1 line
@@ -482,9 +482,9 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 			GUICtrlSetState($idListview, 64)
 			GUICtrlSetState($idButtonCustomFolder, 64)
 			GUICtrlSetState($idBtnBlockPopUp, 64)
@@ -510,7 +510,7 @@ Func MainGui()
 	$MyhGUI = GUICreate($g_AppWndTitle, 595, 710, -1, -1, BitOR($WS_MAXIMIZEBOX, $WS_MINIMIZEBOX, $WS_SIZEBOX, $GUI_SS_DEFAULT_GUI))
 	$hTab = GUICtrlCreateTab(0, 1, 597, 710)
 
-	$hMainTab = GUICtrlCreateTabItem("Main")
+	$hMainTab = GUICtrlCreateTabItem("主页")
 	$idListview = GUICtrlCreateListView("", 10, 35, 575, 555)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 	$g_idListview = GUICtrlGetHandle($idListview) ; get the handle for use in the notify events
@@ -526,52 +526,52 @@ Func MainGui()
 	; Build groups
 	_GUICtrlListView_EnableGroupView($idListview)
 	_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1) ; Group 1
-	_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+	_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 	FillListViewWithInfo()
 
-	$idButtonCustomFolder = GUICtrlCreateButton("Path", 10, 630, 80, 30)
-	GUICtrlSetTip(-1, "Select Path that You want -> press Search -> press Patch button")
+	$idButtonCustomFolder = GUICtrlCreateButton("路径", 10, 630, 80, 30)
+	GUICtrlSetTip(-1, "选择软件安装路径 -> 点击扫描 -> 点击修补")
 	GUICtrlSetImage(-1, "imageres.dll", -4, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idButtonSearch = GUICtrlCreateButton("Search", 110, 630, 80, 30)
-	GUICtrlSetTip(-1, "Let GenP find Apps automatically in current path")
+	$idButtonSearch = GUICtrlCreateButton("扫描", 110, 630, 80, 30)
+	GUICtrlSetTip(-1, "自动扫描安装路径中的软件")
 	GUICtrlSetImage(-1, "imageres.dll", -8, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idButtonStop = GUICtrlCreateButton("Stop", 110, 630, 80, 30)
+	$idButtonStop = GUICtrlCreateButton("停止", 110, 630, 80, 30)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlSetTip(-1, "Stop searching for Apps")
+	GUICtrlSetTip(-1, "停止扫描")
 	GUICtrlSetImage(-1, "imageres.dll", -8, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnDeselectAll = GUICtrlCreateButton("De/Select", 210, 630, 80, 30)
+	$idBtnDeselectAll = GUICtrlCreateButton("全选", 210, 630, 80, 30)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "De/Select All files")
+	GUICtrlSetTip(-1, "切换选择全部文件")
 	GUICtrlSetImage(-1, "imageres.dll", -76, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnCure = GUICtrlCreateButton("Patch", 305, 630, 80, 30)
+	$idBtnCure = GUICtrlCreateButton("修补", 305, 630, 80, 30)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Patch all selected files")
+	GUICtrlSetTip(-1, "修补选中的文件")
 	GUICtrlSetImage(-1, "imageres.dll", -102, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnBlockPopUp = GUICtrlCreateButton("Pop-up", 405, 630, 80, 30)
-	GUICtrlSetTip(-1, "Block Unlicensed Pop-up via Windows Firewall")
+	$idBtnBlockPopUp = GUICtrlCreateButton("弹窗", 405, 630, 80, 30)
+	GUICtrlSetTip(-1, "通过 Windows 防火墙屏蔽盗版弹窗")
 	GUICtrlSetImage(-1, "imageres.dll", -101, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnRestore = GUICtrlCreateButton("Restore", 405, 630, 80, 30)
+	$idBtnRestore = GUICtrlCreateButton("恢复", 405, 630, 80, 30)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlSetTip(-1, "Restore Original Files")
+	GUICtrlSetTip(-1, "恢复原版文件")
 	GUICtrlSetImage(-1, "imageres.dll", -113, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnPatchCC = GUICtrlCreateButton("Patch CC", 505, 630, 80, 30)
+	$idBtnPatchCC = GUICtrlCreateButton("修补CC", 505, 630, 80, 30)
 	GUICtrlSetImage(-1, "imageres.dll", -74, 0)
-	GUICtrlSetTip(-1, "Patch Creative Cloud")
+	GUICtrlSetTip(-1, "修补 Creative Cloud 软件")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	$idProgressBar = GUICtrlCreateProgress(10, 597, 575, 25, $PBS_SMOOTHREVERSE)
@@ -581,17 +581,17 @@ Func MainGui()
 	GUICtrlSetResizing(-1, $GUI_DOCKBOTTOM)
 	GUICtrlCreateTabItem("")
 
-	$hLogTab = GUICtrlCreateTabItem("Log")
+	$hLogTab = GUICtrlCreateTabItem("日志")
 	$idMemo = GUICtrlCreateEdit("", 10, 35, 575, 555, BitOR($ES_READONLY, $ES_CENTER, $WS_DISABLED))
 	GUICtrlSetResizing(-1, $GUI_DOCKVCENTER)
 
 	$idLog = GUICtrlCreateEdit("", 10, 35, 575, 555, BitOR($WS_VSCROLL, $ES_AUTOVSCROLL, $ES_READONLY))
 	GUICtrlSetResizing(-1, $GUI_DOCKVCENTER)
 	GUICtrlSetState($idLog, $GUI_HIDE)
-	GUICtrlSetData($idLog, "Activity Log" & @CRLF)
+	GUICtrlSetData($idLog, "激活日志" & @CRLF)
 
-	$idBtnCopyLog = GUICtrlCreateButton("Copy", 257, 630, 80, 30)
-	GUICtrlSetTip(-1, "Copy log to the clipboard")
+	$idBtnCopyLog = GUICtrlCreateButton("复制", 257, 630, 80, 30)
+	GUICtrlSetTip(-1, "将日志内容复制到剪贴板")
 	GUICtrlSetImage(-1, "imageres.dll", -77, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
@@ -599,7 +599,7 @@ Func MainGui()
 	GUICtrlSetResizing(-1, $GUI_DOCKBOTTOM)
 	GUICtrlCreateTabItem("")
 
-	MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Waiting for user action.")
+	MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作.")
 
 	GUICtrlSetState($idButtonSearch, 256) ; Set focus
 	GUISetState(@SW_SHOW)
@@ -609,7 +609,7 @@ EndFunc   ;==>MainGui
 
 Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 	;_FileListToArrayEx
-	_GUICtrlListView_SetItemText($idListview, 1, "Searching for files.", 1)
+	_GUICtrlListView_SetItemText($idListview, 1, "正在扫描文件.", 1)
 	;_GUICtrlListView_SetItemGroupID($idListview, 0, 1)
 
 	Local $RecursiveFileSearch_MaxDeep = 6
@@ -671,9 +671,9 @@ Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 
 	;Lazy screenupdates
 	If 1 = Random(0, 10, 1) Then
-		MemoWrite(@CRLF & "Searching in " & $FileCount & " files" & @TAB & @TAB & "Found : " & UBound($FilesToPatch) & @CRLF & _
+		MemoWrite(@CRLF & "共 " & $FileCount & " 个文件" & @TAB & @TAB & "已找到: " & UBound($FilesToPatch) & @CRLF & _
 				"---" & @CRLF & _
-				"Level: " & $DEPTH & " Time elapsed : " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s)" & @TAB & @TAB & "Excluded because of *.bak: " & UBound($FilesToRestore) & @CRLF & _
+				"深度: " & $DEPTH & " 用时: " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒" & @TAB & @TAB & "找到备份文件 *.bak: " & UBound($FilesToRestore) & @CRLF & _
 				"---" & @CRLF & _
 				$INSTARTDIR _
 				)
@@ -689,7 +689,7 @@ Func FillListViewWithInfo()
 	_GUICtrlListView_SetExtendedListViewStyle($idListview, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER))
 
 	_Expand_All_Click()
-	_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+	_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 	; Add items
 	For $i = 0 To 17
@@ -698,23 +698,23 @@ Func FillListViewWithInfo()
 	Next
 
 	_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
-	_GUICtrlListView_AddSubItem($idListview, 1, "To patch all apps in the default location:", 1)
-	_GUICtrlListView_AddSubItem($idListview, 2, "Press 'Search Files', then press 'Patch Files'.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 3, "Default path - C:\Program Files\Adobe", 1)
+	_GUICtrlListView_AddSubItem($idListview, 1, "如要修补所有安装在默认路径的软件:", 1)
+	_GUICtrlListView_AddSubItem($idListview, 2, "点击 '扫描'，然后点击 '修补'.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 3, "默认路径 - C:\Program Files\Adobe", 1)
 	_GUICtrlListView_AddSubItem($idListview, 4, '-------------------------------------------------------------', 1)
-	_GUICtrlListView_AddSubItem($idListview, 5, "To patch Creative Cloud, press 'Patch CC'.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 5, "如要修补 Creative Cloud，请点击 '修补CC'.", 1)
 	_GUICtrlListView_AddSubItem($idListview, 6, '-------------------------------------------------------------', 1)
-	_GUICtrlListView_AddSubItem($idListview, 7, "After searching, some products may already be patched.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 8, "To select/deselect products to patch, LEFT CLICK on the product group.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 9, "To select/deselect individual files, RIGHT CLICK on the file.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 10, "Auditon may require a clean re-install when updating to a newer release.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 7, "扫描完成后，也许部分软件之前已经修补过了.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 8, "左键点击选择是否修补某个软件.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 9, "右键点击选择是否修补某个文件.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 10, "Audition 更新到新版本之后可能需要完全重装一下.", 1)
 	_GUICtrlListView_AddSubItem($idListview, 11, '-------------------------------------------------------------', 1)
-	_GUICtrlListView_AddSubItem($idListview, 12, "What's new in GenP:", 1)
-	_GUICtrlListView_AddSubItem($idListview, 13, "Added Character Animator (Beta) support.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 14, "Fixed issues with TrustedInstaller elevation and 32-bit Creative Cloud installations.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 15, "Added Hosts file backup and prevented it from being overwritten.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 16, "Removed support for all Maxon products due to compatibility reasons.", 1)
-	_GUICtrlListView_AddSubItem($idListview, 17, "You should OPTIONALLY remove any old GenP/Adobe entries within your Hosts file for this update.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 12, "GenP 版本更新日志:", 1)
+	_GUICtrlListView_AddSubItem($idListview, 13, "添加了 Character Animator (Beta) 支持.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 14, "修复了 TrustedInstaller 提权问题和 32 位 Creative Cloud 的问题.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 15, "新增了 Hosts 文件备份，并防止其被覆盖.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 16, "由于兼容性问题，移除所有 Maxon 软件的支持.", 1)
+	_GUICtrlListView_AddSubItem($idListview, 17, "您可能需要手动清理 Hosts 文件中的旧版 GenP/Adobe 条目残留.", 1)
 
 	$fFilesListed = 0
 
@@ -735,13 +735,13 @@ Func FillListViewWithFiles()
 		Next
 		_GUICtrlListView_AddArray($idListview, $aItems)
 
-		MemoWrite(@CRLF & UBound($FilesToPatch) & " File(s) were found in " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s) at:" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Press the 'Patch Files'")
-		LogWrite(1, UBound($FilesToPatch) & " File(s) were found in " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s)" & @CRLF)
+		MemoWrite(@CRLF & "已找到 " & UBound($FilesToPatch) & " 个文件 耗时 " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒 文件位于:" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "请点击 '修补'")
+		LogWrite(1, "已找到 " & UBound($FilesToPatch) & " 个文件，耗时 " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒" & @CRLF)
 		;_ArrayDisplay($FilesToPatch)
 		$fFilesListed = 1
 	Else
-		MemoWrite(@CRLF & "Nothing was found in" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
-		LogWrite(1, "Nothing was found in " & $MyDefPath)
+		MemoWrite(@CRLF & "啥也没找到" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
+		LogWrite(1, "啥也没找到 " & $MyDefPath)
 		$fFilesListed = 0
 	EndIf
 
@@ -795,7 +795,7 @@ EndFunc   ;==>ProgressWrite
 
 Func MyFileOpenDialog()
 	; Create a constant variable in Local scope of the message to display in FileOpenDialog.
-	Local Const $sMessage = "Select a Path"
+	Local Const $sMessage = "请选择路径"
 
 	; Display an open dialog to select a file.
 	FileSetAttrib("C:\Program Files\WindowsApps", "-H")
@@ -806,7 +806,7 @@ Func MyFileOpenDialog()
 		; Display the error message.
 		;MsgBox($MB_SYSTEMMODAL, "", "No folder was selected.")
 		FileSetAttrib("C:\Program Files\WindowsApps", "+H")
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 
 	Else
 		GUICtrlSetState($idBtnCure, 128)
@@ -822,12 +822,12 @@ Func MyFileOpenDialog()
 		_GUICtrlListView_AddItem($idListview, "", 5)
 		_GUICtrlListView_AddItem($idListview, "", 6)
 		_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
-		_GUICtrlListView_AddSubItem($idListview, 1, "Path:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 1, "路径:", 1)
 		_GUICtrlListView_AddSubItem($idListview, 2, " " & $MyDefPath, 1)
-		_GUICtrlListView_AddSubItem($idListview, 3, "Step 1:", 1)
-		_GUICtrlListView_AddSubItem($idListview, 4, " Press 'Search Files' - wait until GenP finds all files", 1)
-		_GUICtrlListView_AddSubItem($idListview, 5, "Step 2:", 1)
-		_GUICtrlListView_AddSubItem($idListview, 6, " Press 'Patch Files' - wait until GenP will do it's job", 1)
+		_GUICtrlListView_AddSubItem($idListview, 3, "第一步:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 4, " 点击 '扫描' - 等待 GenP 找到所有文件", 1)
+		_GUICtrlListView_AddSubItem($idListview, 5, "第二步:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 6, " 点击 '修补' - 等待 GenP 完成修补工作", 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 0, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 1, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 2, 1)
@@ -835,10 +835,10 @@ Func MyFileOpenDialog()
 		_GUICtrlListView_SetItemGroupID($idListview, 4, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 5, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 6, 1)
-		_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+		_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 		FileSetAttrib("C:\Program Files\WindowsApps", "+H")
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Press the Search button")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "点击扫描按钮")
 		; Display the selected folder.
 		;MsgBox($MB_SYSTEMMODAL, "", "You chose the following folder:" & @CRLF & $MyDefPath)
 		GUICtrlSetState($idBtnBlockPopUp, $GUI_SHOW)
@@ -868,8 +868,8 @@ Func MyGlobalPatternSearch($MyFileToParse)
 	Local $sFileName = StringRegExpReplace($MyFileToParse, "^.*\\", "")
 	Local $sExt = StringRegExpReplace($sFileName, "^.*\.", "")
 
-	MemoWrite(@CRLF & $MyFileToParse & @CRLF & "---" & @CRLF & "Preparing to Analyze" & @CRLF & "---" & @CRLF & "*****")
-	LogWrite(1, "Checking File: " & $sFileName & " ")
+	MemoWrite(@CRLF & $MyFileToParse & @CRLF & "---" & @CRLF & "分析中" & @CRLF & "---" & @CRLF & "*****")
+	LogWrite(1, "正在检查文件: " & $sFileName & " ")
 	;MsgBox($MB_SYSTEMMODAL,"","$sFileName = " & $sFileName & @CRLF & "$sExt = " & $sExt)
 
 	If $sExt = "exe" Then
@@ -884,10 +884,10 @@ Func MyGlobalPatternSearch($MyFileToParse)
 
 	If StringInStr($sSpecialFiles, $sFileName) Then
 		;MsgBox($MB_SYSTEMMODAL, "", "Special File: " & $sFileName)
-		LogWrite(0, " - using Custom Patterns")
+		LogWrite(0, " - 使用自定义特征")
 		ExecuteSearchPatterns($sFileName, 0, $MyFileToParse)
 	Else
-		LogWrite(0, " - using Default Patterns")
+		LogWrite(0, " - 使用默认特征")
 		ExecuteSearchPatterns($sFileName, 1, $MyFileToParse)
 		;MsgBox($MB_SYSTEMMODAL, "", "File: " & $sFileName & @CRLF & "Not in Special Files")
 	EndIf
@@ -918,12 +918,12 @@ Func ExecuteSearchPatterns($FileName, $DefaultPatterns, $MyFileToParse)
 
 				$iPatternLength = StringLen($sSearch)
 				If $iPatternLength <> StringLen($sReplace) Or Mod($iPatternLength, 2) <> 0 Then
-					MsgBox($MB_SYSTEMMODAL, "Error", "Pattern Error in config.ini:" & $sPattern & @CRLF & $sSearch & @CRLF & $sReplace)
+					MsgBox($MB_SYSTEMMODAL, "错误", "配置文件 config.ini 中特征有误:" & $sPattern & @CRLF & $sSearch & @CRLF & $sReplace)
 					Exit
 				EndIf
 
 				;MsgBox(0,0, $MyFileToParse & @CRLF & $sSearch & @CRLF  & $aReplace & @CRLF  & $sPattern )
-				LogWrite(1, "Searching for: " & $sPattern & ": " & $sSearch)
+				LogWrite(1, "正在查找: " & $sPattern & ": " & $sSearch)
 
 				MyRegExpGlobalPatternSearch($MyFileToParse, $sSearch, $sReplace, $sPattern)
 
@@ -951,7 +951,7 @@ Func MyRegExpGlobalPatternSearch($FileToParse, $PatternToSearch, $PatternToRepla
 
 	If $sz_type = "0x4C01" And StringInStr($FileToParse, "Acrobat", 2) > 0 Then ; Acrobat x86 won't work with this script
 
-		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "File is 32bit. Aborting..." & @CRLF & "---")
+		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "程序文件为 32 位，终止..." & @CRLF & "---")
 		FileClose($hFileOpen)
 		Sleep(100)
 		$bFoundAcro32 = True
@@ -959,25 +959,25 @@ Func MyRegExpGlobalPatternSearch($FileToParse, $PatternToSearch, $PatternToRepla
 	ElseIf $sz_type = "0x64AA" Then ; AArch64 (ARM64) and ~~AArch32 (ARM32) architectures~~ (big-endian). only exist as photoshop, lightroom, and ccdesktop at time of writing
 
 		If StringInStr($FileToParse, "Lightroom", 2) > 0 Then ; Lightroom ARM
-			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Lightroom is ARM. Aborting..." & @CRLF & "---")
+			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Lightroom 为 ARM 版，终止..." & @CRLF & "---")
 			FileClose($hFileOpen)
 			Sleep(100)
 			$bFoundLrARM = True
 
 		ElseIf StringInStr($FileToParse, "AppsPanelBL.dll", 2) Or StringInStr($FileToParse, "ContainerBL.dll", 2) Or StringInStr($FileToParse, "Adobe Desktop Service.exe", 2) > 0 Then ; CC Desktop ARM
-			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Creative Cloud is ARM. Aborting..." & @CRLF & "---")
+			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Creative Cloud 为 ARM 版，终止..." & @CRLF & "---")
 			FileClose($hFileOpen)
 			Sleep(100)
 			$bFoundCCARM = True
 
 		ElseIf StringInStr($FileToParse, "Photoshop", 2) > 0 Then ; Photoshop ARM
-			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Photoshop is ARM. Aborting..." & @CRLF & "---")
+			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "Photoshop 为 ARM 版，终止..." & @CRLF & "---")
 			FileClose($hFileOpen)
 			Sleep(100)
 			$bFoundPsARM = True
 
 		Else ; Other ARM
-			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "File is ARM. Aborting..." & @CRLF & "---")
+			MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "程序文件为 ARM 架构，终止..." & @CRLF & "---")
 			FileClose($hFileOpen)
 			Sleep(100)
 			$bFoundGenericARM = True
@@ -1050,11 +1050,11 @@ Func MyRegExpGlobalPatternSearch($FileToParse, $PatternToSearch, $PatternToRepla
 				ConsoleWrite($PatternName & "---" & @TAB & $sWildcardSearchPattern & "	" & @CRLF)
 				ConsoleWrite($PatternName & "R" & "--" & @TAB & $sFinalReplacePattern & "	" & @CRLF)
 				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & @CRLF & "---" & @CRLF & $sWildcardSearchPattern & @CRLF & $sFinalReplacePattern)
-				LogWrite(1, "Replacing with: " & $sFinalReplacePattern)
+				LogWrite(1, "替换为: " & $sFinalReplacePattern)
 
 			Else
-				ConsoleWrite($PatternName & "---" & @TAB & "No" & "	" & @CRLF)
-				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & "---" & "No")
+				ConsoleWrite($PatternName & "---" & @TAB & "无" & "	" & @CRLF)
+				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & "---" & "无")
 			EndIf
 			$MyRegExpGlobalPatternSearchCount += 1
 
@@ -1078,7 +1078,7 @@ Func MyGlobalPatternPatch($MyFileToPatch, $MyArrayToPatch)
 	;MemoWrite("Current path" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "medication :)")
 	Local $iRows = UBound($MyArrayToPatch) ; Total number of rows
 	If $iRows > 0 Then
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "medication :)")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "开始用药 :)")
 		Local $hFileOpen = FileOpen($MyFileToPatch, $FO_READ + $FO_BINARY)
 		Local $sFileRead = FileRead($hFileOpen)
 		Local $sStringOut
@@ -1100,15 +1100,15 @@ Func MyGlobalPatternPatch($MyFileToPatch, $MyArrayToPatch)
 		Sleep(100)
 		;MemoWrite1(@CRLF & "---" & @CRLF & "Waitng for your command :)" & @CRLF & "---")
 
-		LogWrite(1, "File patched." & @CRLF)
+		LogWrite(1, "文件已修补." & @CRLF)
 
 	Else
 		;Empty array - > no search-replace patterns
 		;File is already patched or no patterns were found .
-		MemoWrite(@CRLF & "No patterns were found" & @CRLF & "---" & @CRLF & "or" & @CRLF & "---" & @CRLF & "file is already patched.")
+		MemoWrite(@CRLF & "找不到特征" & @CRLF & "---" & @CRLF & "或者" & @CRLF & "---" & @CRLF & "文件已经修补过了.")
 		Sleep(100)
 
-		LogWrite(1, "No patterns were found or file already patched." & @CRLF)
+		LogWrite(1, "找不到特征或文件已经修补过了." & @CRLF)
 
 	EndIf
 	;Sleep(100)
@@ -1120,14 +1120,14 @@ Func RestoreFile($MyFileToDelete)
 		FileDelete($MyFileToDelete)
 		FileMove($MyFileToDelete & ".bak", $MyFileToDelete, $FC_OVERWRITE)
 		Sleep(100)
-		MemoWrite(@CRLF & "File restored" & @CRLF & "---" & @CRLF & $MyFileToDelete)
+		MemoWrite(@CRLF & "文件已恢复" & @CRLF & "---" & @CRLF & $MyFileToDelete)
 		LogWrite(1, $MyFileToDelete)
-		LogWrite(1, "File restored.")
+		LogWrite(1, "文件已恢复.")
 	Else
 		Sleep(100)
-		MemoWrite(@CRLF & "No backup file found" & @CRLF & "---" & @CRLF & $MyFileToDelete)
+		MemoWrite(@CRLF & "未找到备份文件" & @CRLF & "---" & @CRLF & $MyFileToDelete)
 		LogWrite(1, $MyFileToDelete)
-		LogWrite(1, "No backup file found.")
+		LogWrite(1, "未找到备份文件.")
 	EndIf
 EndFunc   ;==>RestoreFile
 
@@ -1136,7 +1136,7 @@ EndFunc   ;==>RestoreFile
 Func BlockPopUp()
 	GUICtrlSetState($hLogTab, $GUI_SHOW)
 	GUICtrlSetState($idBtnBlockPopUp, 128)
-	MemoWrite(@CRLF & "Checking for an active internet connection..." & @CRLF & "" & @CRLF & "")
+	MemoWrite(@CRLF & "检查网络连接..." & @CRLF & "" & @CRLF & "")
 	Local $sCmdInfo = """C:\Windows\System32\WindowsPowerShell\v1.0\PowerShell.exe"" -Command ""Test-Connection 8.8.8.8 -Count 1 -Quiet"""
 	Local $iPID = Run($sCmdInfo, "", @SW_HIDE, BitOR($STDERR_CHILD, $STDOUT_CHILD))
 	Local $sOutput = ""
@@ -1146,7 +1146,7 @@ Func BlockPopUp()
 	WEnd
 	ProcessWaitClose($iPID)
 	If StringReplace($sOutput, @CRLF, "") = "True" Then
-		MemoWrite(@CRLF & "Resolving ip-addresses..." & @CRLF & "" & @CRLF & "")
+		MemoWrite(@CRLF & "解析 IP 地址..." & @CRLF & "" & @CRLF & "")
 		$sCmdInfo = """C:\Windows\System32\WindowsPowerShell\v1.0\PowerShell.exe"" -Command ""$currentDate=Get-Date;$ipAddresses=@();try{$SOA=(Resolve-DnsName -Name adobe.io -Type SOA -ErrorAction Stop).PrimaryServer}catch{$SOA=$null};if($SOA){Do{if((New-TimeSpan -Start $currentDate -End (Get-Date)).TotalSeconds -gt 5){if($ipAddresses.Count -eq 0){$ipAddresses+='False'};break};try{$ipAddress=(Resolve-DnsName -Name adobe.io -Server $SOA -ErrorAction Stop).IPAddress}catch{$ipAddress=$null};if($ipAddress){$ipAddresses+=$ipAddress};$ipAddresses=$ipAddresses|Select -Unique|Sort-Object}While($ipAddresses.Count -lt 8)}else{$ipAddresses+='False'};Do{if((New-TimeSpan -Start $currentDate -End (Get-Date)).TotalSeconds -gt 5 -or $ipAddresses[0] -eq 'False'){break};try{$ipAddress=(Resolve-DnsName -Name 3u6k9as4bj.adobestats.io -ErrorAction Stop).IPAddress}catch{$ipAddress=$null};if($ipAddress){$ipAddresses+=$ipAddress};$ipAddresses=$ipAddresses|Select -Unique|Sort-Object}While($ipAddresses.Count -lt 12 -and $ipAddresses[0] -ne 'False');$ipAddresses=$ipAddresses -ne 'False'|Select -Unique|Sort-Object;$ipAddressList=if($ipAddresses.Count -eq 0){'False'}else{$ipAddresses -join ','};$ipAddressList"""
 		$iPID = Run($sCmdInfo, "", @SW_HIDE, BitOR($STDERR_CHILD, $STDOUT_CHILD))
 		$sOutput = ""
@@ -1156,10 +1156,10 @@ Func BlockPopUp()
 		WEnd
 		ProcessWaitClose($iPID)
 		If StringInStr($sOutput, "False") Then
-			MemoWrite(@CRLF & "Failed to resolve ip-addresses, try using a VPN..." & @CRLF & "" & @CRLF & "")
+			MemoWrite(@CRLF & "无法解析 IP 地址，请尝试使用 VPN..." & @CRLF & "" & @CRLF & "")
 			Sleep(2000)
 		Else
-			MemoWrite(@CRLF & "Adding Windows Firewall rule..." & @CRLF & "" & @CRLF & "")
+			MemoWrite(@CRLF & "添加 Windows 防火墙规则..." & @CRLF & "" & @CRLF & "")
 			$sCmdInfo = "netsh advfirewall firewall delete rule name=""Adobe Unlicensed Pop-up"""
 			$iPID = Run($sCmdInfo, "", @SW_HIDE, BitOR($STDERR_CHILD, $STDOUT_CHILD))
 			ProcessWaitClose($iPID)
@@ -1167,7 +1167,7 @@ Func BlockPopUp()
 			$iPID = Run($sCmdInfo, "", @SW_HIDE, BitOR($STDERR_CHILD, $STDOUT_CHILD))
 			ProcessWaitClose($iPID)
 		EndIf
-		MemoWrite(@CRLF & "Blocking Hosts..." & @CRLF & "" & @CRLF & "")
+		MemoWrite(@CRLF & "添加 Hosts 屏蔽..." & @CRLF & "" & @CRLF & "")
 		$sCmdInfo = """C:\Windows\System32\WindowsPowerShell\v1.0\PowerShell.exe"" -Command ""try{if(-not([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Write-Host 'Script execution failed...';return};$hostsPath='C:\Windows\System32\drivers\etc\hosts';$bakPath=$hostsPath+'.bak';if(-not(Test-Path $bakPath)){Copy-Item -Path $hostsPath -Destination $bakPath};$webContent=(Invoke-RestMethod -Uri 'https://a.dove.isdumb.one/list.txt' -UseBasicParsing).Split($([char]0x0A))|ForEach-Object{ $_.Trim()};$currentHostsContent=Get-Content -Path $hostsPath;$startMarker='# <GenP>';$endMarker='# </GenP>';$blockStart=$currentHostsContent.IndexOf($startMarker);$blockEnd=$currentHostsContent.IndexOf($endMarker);if($blockStart -eq -1 -or $blockEnd -eq -1){$currentHostsContent+=$startMarker;$currentHostsContent+=$endMarker;$blockStart=$currentHostsContent.IndexOf($startMarker);$blockEnd=$currentHostsContent.IndexOf($endMarker)};$newBlock=@($startMarker)+$webContent+$endMarker;$newHostsContent=$currentHostsContent[0..($blockStart-1)]+$newBlock+$currentHostsContent[($blockEnd+1)..$currentHostsContent.Length];Set-Content -Path $hostsPath -Value $newHostsContent;Write-Host 'Script execution complete.'}catch{Write-Host 'Script execution failed...'}"""
 		$iPID = Run($sCmdInfo, "", @SW_HIDE, $STDOUT_CHILD)
 		$sOutput = ""
@@ -1176,13 +1176,13 @@ Func BlockPopUp()
 			If @error Then ExitLoop
 			$sOutput &= $sLine
 		WEnd
-		If StringInStr($sOutput, "Script execution complete.") Then
-			MemoWrite(@CRLF & "All Hosts blocked." & @CRLF & "" & @CRLF & "")
+		If StringInStr($sOutput, "命令执行完毕.") Then
+			MemoWrite(@CRLF & "已设置最新的 Hosts 屏蔽列表." & @CRLF & "" & @CRLF & "")
 		Else
-			MemoWrite(@CRLF & "Failed to block Hosts, try using a VPN..." & @CRLF & "" & @CRLF & "")
+			MemoWrite(@CRLF & "无法获取 Hosts 屏蔽列表，请尝试使用 VPN..." & @CRLF & "" & @CRLF & "")
 		EndIf
 	Else
-		MemoWrite(@CRLF & "You are not connected to the internet..." & @CRLF & "" & @CRLF & "")
+		MemoWrite(@CRLF & "没联网..." & @CRLF & "" & @CRLF & "")
 		GUICtrlSetState($idBtnBlockPopUp, 64)
 	EndIf
 EndFunc   ;==>BlockPopUp
