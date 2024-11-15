@@ -1,2 +1,5 @@
-# Adobe-GenP
-GenP Chinese L10n | GenP 汉化版
+Adobe GenP v3.4.14.1
+
+Reddit community version
+
+From: https://www.reddit.com/r/GenP/wiki/redditgenpguides
