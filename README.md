@@ -1,5 +1,5 @@
-Adobe GenP v3.4.14.1
+Adobe GenP (Reddit 社区版) 汉化
 
-Reddit community version
+v3.4.14.1
 
-From: https://www.reddit.com/r/GenP/wiki/redditgenpguides
+参考：https://www.reddit.com/r/GenP/wiki/redditgenpguides
