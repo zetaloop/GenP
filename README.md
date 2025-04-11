@@ -1,5 +1,7 @@
-Adobe GenP v3.5.0
+Adobe GenP 汉化
 
-CGP Version
+v3.5.0
 
-From: https://www.reddit.com/r/GenP/wiki/redditgenpguides
+下载 -> [GitHub 发行版](https://github.com/zetaloop/GenP/releases)
+
+参考：https://www.reddit.com/r/GenP/wiki/redditgenpguides
