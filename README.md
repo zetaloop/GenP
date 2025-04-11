@@ -1,5 +1,5 @@
-Adobe GenP v3.4.2
+Adobe GenP v3.5.0
 
 CGP Version
 
-From: https://www.cybermania.ws/apps/genp
+From: https://www.reddit.com/r/GenP/wiki/redditgenpguides
