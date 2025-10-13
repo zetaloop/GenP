@@ -44,7 +44,7 @@ AutoItSetOption("GUICloseOnESC", 0)
 
 Global $g_Version = "3.6.9 - CGP"
 Global $g_AppWndTitle = "GenP v" & $g_Version
-Global $g_AppVersion = "CGP Community Edition" & @CRLF & "Originally created by uncia"
+Global $g_AppVersion = "CGP 社区版" & @CRLF & "原版作者 uncia"
 
 If _Singleton($g_AppWndTitle, 1) = 0 Then
 	Exit
@@ -169,7 +169,7 @@ While 1
 		Case $idMsg = $idButtonStop
 			$ListViewSelectFlag = 0   ; Set Flag to Deselected State
 			FillListViewWithInfo()
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Waiting for user action.")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作.")
 			GUICtrlSetState($idButtonStop, $GUI_HIDE)
 			GUICtrlSetState($idButtonSearch, $GUI_SHOW)
 			GUICtrlSetState($idButtonSearch, 64)
@@ -230,19 +230,19 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 			_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
-			_GUICtrlListView_AddSubItem($idListview, 1, "Preparing...", 1)
+			_GUICtrlListView_AddSubItem($idListview, 1, "准备中...", 1)
 			_GUICtrlListView_AddSubItem($idListview, 2, "", 1)
-			_GUICtrlListView_AddSubItem($idListview, 3, "Be patient, please.", 1)
+			_GUICtrlListView_AddSubItem($idListview, 3, "请耐心等待.", 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 0, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 1, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 2, 1)
 			_GUICtrlListView_SetItemGroupID($idListview, 3, 1)
 
 			_Expand_All_Click()
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 			; Clear previous results
 			$FilesToPatch = $FilesToPatchNull
@@ -409,7 +409,7 @@ While 1
 					MyGlobalPatternSearch($ItemFromList)
 					ProgressWrite(0)
 					Sleep(100)
-					MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "medication :)")
+					MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "开始用药 :)")
 					LogWrite(1, $ItemFromList)
 					Sleep(100)
 
@@ -432,9 +432,9 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 			GUICtrlSetState($idListview, 64)
 			GUICtrlSetState($idButtonSearch, 64)
 			GUICtrlSetState($idButtonCustomFolder, 64)
@@ -461,19 +461,19 @@ While 1
 			FillListViewWithInfo()
 
 			If $bFoundAcro32 = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "GenP does not patch the x32 bit version of Acrobat. Please use the x64 bit version of Acrobat.")
-				LogWrite(1, "GenP does not patch the x32 bit version of Acrobat. Please use the x64 bit version of Acrobat.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 x32 版本的 Acrobat，请用 x64 版本.")
+				LogWrite(1, "GenP 不支持 x32 版本的 Acrobat，请用 x64 版本.")
 			EndIf
 			If $bFoundGenericARM = True Then
-				MsgBox($MB_SYSTEMMODAL, "Information", "This GenP build does not support ARM binaries, only x64.")
-				LogWrite(1, "This GenP build does not support ARM binaries, only x64.")
+				MsgBox($MB_SYSTEMMODAL, "提示", "GenP 不支持 ARM 版本，仅支持 x64 版本.")
+				LogWrite(1, "GenP 不支持 ARM 版本，仅支持 x64 版本.")
 			EndIf
 
 			ToggleLog(1)
 			GUICtrlSetState($hLogTab, $GUI_SHOW)
 
 		Case $idMsg = $idBtnRestore
-			GUICtrlSetData($idLog, "Activity Log" & @CRLF & "- - - - - - - - - - -" & @CRLF & @CRLF & "GenP Version: " & $g_Version & "" & @CRLF & "Config Version: " & $ConfigVerVar & "" & @CRLF)
+			GUICtrlSetData($idLog, "操作日志" & @CRLF & "- - - - - - - - - - -" & @CRLF & @CRLF & "GenP 版本: " & $g_Version & "" & @CRLF & "配置版本: " & $ConfigVerVar & "" & @CRLF)
 			ToggleLog(0)
 			GUICtrlSetState($idListview, 128)
 			GUICtrlSetState($idBtnDeselectAll, 128)
@@ -516,7 +516,7 @@ While 1
 
 					ProgressWrite($iProgress)
 					Sleep(100)
-					MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "restoring :)")
+					MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $ItemFromList & @CRLF & "---" & @CRLF & "正在还原 :)")
 					Sleep(100)
 
 					; Scroll control 10 pixels - 1 line
@@ -534,9 +534,9 @@ While 1
 
 			_GUICtrlListView_RemoveAllGroups($idListview)
 			_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1)    ; Group 1
-			_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+			_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
-			MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+			MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 			GUICtrlSetState($idListview, 64)
 			GUICtrlSetState($idButtonCustomFolder, 64)
 			GUICtrlSetState($idBtnRestore, 128)
@@ -641,21 +641,21 @@ While 1
 			ManageDevOverride()
 
 		Case $idMsg = $idBtnAGSInfo
-			ShowInfoPopup("Removes Genuine Services and related files to remove the 'Genuine Service Alert' popup." & @CRLF & @CRLF & "Removal will ONLY stop popups which say 'Genuine Service Alert' in the popup title bar.")
+			ShowInfoPopup("移除 Adobe 正版服务及相关文件，用于移除标题为 '正版服务警告' 的弹窗。" & @CRLF & @CRLF & "对其他类型的正版弹窗无效。")
 
 		Case $idMsg = $idBtnFirewallInfo
-			ShowInfoPopup("Manages Windows Firewall rules to block apps from accessing the internet -- stopping popups. Easily add outbound rules for any installed app, toggle all rules off/on, or delete all rules." & @CRLF & @CRLF & "Some app features may not work when cut from internet.")
+			ShowInfoPopup("通过 Windows 防火墙规则阻止 Adobe 软件联网来移除正版弹窗。可以一键为所有 Adobe 软件添加出站规则、切换开关、或删除所有规则。" & @CRLF & @CRLF & "软件被断网之后，部分功能可能会无法使用。")
 
 		Case $idMsg = $idBtnHostsInfo
-			ShowInfoPopup("Manages hosts file -- specifically targeting domains used for popups. Auto update hosts using the provided list URL (Options), manually edit in Notepad, remove all entries, or restore a backup." & @CRLF & @CRLF & "Hosts must be updated regularly to remain effective.")
+			ShowInfoPopup("在 hosts 文件中屏蔽与正版弹窗相关的域名。您可以选择从指定网址（在设置中可以修改）更新屏蔽条目、在记事本中手动编辑、移除所有屏蔽条目、恢复 hosts 备份。" & @CRLF & @CRLF & "请定期更新 Hosts 文件。")
 
 		Case $idMsg = $idBtnRuntimeInfo
-			ShowInfoPopup("Select apps may pack the RuntimeInstaller.dll with UPX causing patching to fail. GenP can unpack these files so they can then be patched." & @CRLF & @CRLF & @CRLF & @CRLF & _
-					"UPX 5.0.1, Copyright (C) 1996-2025 Markus Oberhumer, Laszlo Molnar & John Reiser" & @CRLF & _
-					"UPX is distributed under a modified GNU GPL v2. See https://github.com/upx/upx for license and source code.")
+			ShowInfoPopup("部分 Adobe 软件使用 UPX 打包 RuntimeInstaller.dll，导致修补失败。GenP 可以解除这些文件的 UPX 保护以便进行修补。" & @CRLF & @CRLF & _
+					"UPX 5.0.1, 版权所有 (C) 1996-2025 Markus Oberhumer、Laszlo Molnar 与 John Reiser。" & @CRLF & _
+					"UPX 按照经修改的 GNU GPL v2 许可证发布，许可证与源代码请参见 https://github.com/upx/upx")
 
 		Case $idMsg = $idBtnWintrustInfo
-			ShowInfoPopup("Avoid popups by ' trusting' each app. Uses a modified DLL + registry edit for allowing DLL redirection. Trust/Untrust each app or add/remove the reg key as needed. Reg key is auto-added when trusting apps." & @CRLF & @CRLF & "Shout out Team V.R !")
+			ShowInfoPopup("通过修改 WinTrust 绕过验证来移除正版弹窗。使用一个修改版 DLL + 注册表项来允许 DLL 重定向。可按需为每个软件进行修改/还原，以及添加/删除此注册表项。选择修改将会自动添加注册表项。" & @CRLF & @CRLF & "鸣谢 Team V.R！")
 	EndSelect
 WEnd
 
@@ -663,7 +663,7 @@ Func MainGui()
 	$MyhGUI = GUICreate($g_AppWndTitle, 595, 510, -1, -1, BitOR($WS_MAXIMIZEBOX, $WS_MINIMIZEBOX, $WS_SIZEBOX, $GUI_SS_DEFAULT_GUI))
 	$hTab = GUICtrlCreateTab(0, 1, 597, 510)
 
-	$hMainTab = GUICtrlCreateTabItem("Main")
+	$hMainTab = GUICtrlCreateTabItem("主页")
 	$idListview = GUICtrlCreateListView("", 10, 35, 575, 355)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 	$g_idListview = GUICtrlGetHandle($idListview) ; get handle for use in the notify events
@@ -674,46 +674,46 @@ Func MainGui()
 	; Add columns
 	_GUICtrlListView_SetItemCount($idListview, UBound($FilesToPatch))
 	_GUICtrlListView_AddColumn($idListview, "", 20)
-	_GUICtrlListView_AddColumn($idListview, "[Click to expand/collapse all]", 532, 2)
+	_GUICtrlListView_AddColumn($idListview, "[点击此处折叠/展开全部]", 532, 2)
 
 	; Build groups
 	_GUICtrlListView_EnableGroupView($idListview)
 	_GUICtrlListView_InsertGroup($idListview, -1, 1, "", 1) ; Group 1
-	_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+	_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 	FillListViewWithInfo()
 
-	$idButtonCustomFolder = GUICtrlCreateButton("Path", 10, 430, 80, 30)
-	GUICtrlSetTip(-1, "Set custom search path")
+	$idButtonCustomFolder = GUICtrlCreateButton("路径", 10, 430, 80, 30)
+	GUICtrlSetTip(-1, "设定扫描路径")
 	GUICtrlSetImage(-1, "imageres.dll", -4, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idButtonSearch = GUICtrlCreateButton("Search", 134, 430, 80, 30)
-	GUICtrlSetTip(-1, "Search path for installed apps")
+	$idButtonSearch = GUICtrlCreateButton("扫描", 134, 430, 80, 30)
+	GUICtrlSetTip(-1, "扫描 Adobe 软件")
 	GUICtrlSetImage(-1, "imageres.dll", -8, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idButtonStop = GUICtrlCreateButton("Stop", 134, 430, 80, 30)
+	$idButtonStop = GUICtrlCreateButton("停止", 134, 430, 80, 30)
 	GUICtrlSetState(-1, $GUI_HIDE)
-	GUICtrlSetTip(-1, "Stop search")
+	GUICtrlSetTip(-1, "停止扫描")
 	GUICtrlSetImage(-1, "imageres.dll", -8, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnCure = GUICtrlCreateButton("Patch", 258, 430, 80, 30)
+	$idBtnCure = GUICtrlCreateButton("修补", 258, 430, 80, 30)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Patch selected file(s)")
+	GUICtrlSetTip(-1, "修补所选文件")
 	GUICtrlSetImage(-1, "imageres.dll", -102, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnDeselectAll = GUICtrlCreateButton("De/Select", 381, 430, 80, 30)
+	$idBtnDeselectAll = GUICtrlCreateButton("全选", 381, 430, 80, 30)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "De/Select all files")
+	GUICtrlSetTip(-1, "选择或取消选择所有文件")
 	GUICtrlSetImage(-1, "imageres.dll", -76, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idBtnRestore = GUICtrlCreateButton("Restore", 505, 430, 80, 30)
+	$idBtnRestore = GUICtrlCreateButton("还原", 505, 430, 80, 30)
 	GUICtrlSetState(-1, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Restore original file(s)")
+	GUICtrlSetTip(-1, "还原所选文件的原版备份")
 	GUICtrlSetImage(-1, "imageres.dll", -113, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
@@ -728,9 +728,9 @@ Func MainGui()
 
 	GUICtrlCreateTabItem("")
 
-	$hOptionsTab = GUICtrlCreateTabItem("Options")
+	$hOptionsTab = GUICtrlCreateTabItem("设置")
 
-	$idFindACC = GUICtrlCreateCheckbox("Always search for ACC", 10, 50, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
+	$idFindACC = GUICtrlCreateCheckbox("始终扫描 Creative Cloud", 10, 50, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
 	If $bFindACC = 1 Then
 		GUICtrlSetState($idFindACC, $GUI_CHECKED)
 	Else
@@ -738,7 +738,7 @@ Func MainGui()
 	EndIf
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idEnableMD5 = GUICtrlCreateCheckbox("Enable MD5 Checksum", 10, 90, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
+	$idEnableMD5 = GUICtrlCreateCheckbox("启用 MD5 校验", 10, 90, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
 	If $bEnableMD5 = 1 Then
 		GUICtrlSetState($idEnableMD5, $GUI_CHECKED)
 	Else
@@ -746,7 +746,7 @@ Func MainGui()
 	EndIf
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idOnlyAFolders = GUICtrlCreateCheckbox("Search in default named folders only", 10, 130, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
+	$idOnlyAFolders = GUICtrlCreateCheckbox("仅扫描名称含 Adobe/Acrobat 的文件夹", 10, 130, 300, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
 	If $bOnlyAFolders = 1 Then
 		GUICtrlSetState($idOnlyAFolders, $GUI_CHECKED)
 	Else
@@ -754,12 +754,12 @@ Func MainGui()
 	EndIf
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$idCustomDomainListLabel = GUICtrlCreateLabel("Hosts List URL:", 10, 180, 100, 20)
-	$idCustomDomainListInput = GUICtrlCreateInput($sCurrentDomainListURL, 90, 175, 490, 20, BitOR($ES_LEFT, $ES_WANTRETURN, $ES_AUTOHSCROLL))
+	$idCustomDomainListLabel = GUICtrlCreateLabel("Hosts 屏蔽列表地址:", 10, 180, 140, 20)
+	$idCustomDomainListInput = GUICtrlCreateInput($sCurrentDomainListURL, 130, 175, 450, 20, BitOR($ES_LEFT, $ES_WANTRETURN, $ES_AUTOHSCROLL))
 	GUICtrlSetLimit($idCustomDomainListInput, 255)
 
-	$idBtnSaveOptions = GUICtrlCreateButton("Save Options", 247, 430, 100, 30)
-	GUICtrlSetTip(-1, "Save options to config.ini")
+	$idBtnSaveOptions = GUICtrlCreateButton("保存设置", 247, 430, 100, 30)
+	GUICtrlSetTip(-1, "将设置保存到 config.ini")
 	GUICtrlSetImage(-1, "imageres.dll", 5358, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
@@ -771,88 +771,88 @@ Func MainGui()
 
 	GUICtrlCreateTabItem("")
 
-	$hPopupTab = GUICtrlCreateTabItem("Pop-up Tools")
+	$hPopupTab = GUICtrlCreateTabItem("弹窗移除")
 
 	; --- Genuine Services ---
-	$idBtnAGSInfo = GUICtrlCreateButton("?", 385, 38, 20, 20)
+	$idBtnAGSInfo = GUICtrlCreateButton("?", 325, 38, 20, 20)
 	GUICtrlSetFont($idBtnAGSInfo, 10, 400, 0, "Arial")
 	GUICtrlSetResizing($idBtnAGSInfo, $GUI_DOCKAUTO)
-	$sRemoveAGSText = "GENUINE SERVICES"
+	$sRemoveAGSText = "正版服务"
 	$idLabelRemoveAGS = GUICtrlCreateLabel($sRemoveAGSText, 5, 40, 580, 20, $SS_CENTER)
 	GUICtrlSetFont($idLabelRemoveAGS, 10, 700)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnRemoveAGS = GUICtrlCreateButton("Remove AGS", 225, 65, 140, 30)
-	GUICtrlSetTip(-1, "Remove Genuine Services files/services to remove pop-up")
+	$idBtnRemoveAGS = GUICtrlCreateButton("删除 AGS", 225, 65, 140, 30)
+	GUICtrlSetTip(-1, "删除正版服务来移除正版警告弹窗")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	; --- Firewall ---
-	$idBtnFirewallInfo = GUICtrlCreateButton("?", 330, 113, 20, 20)
+	$idBtnFirewallInfo = GUICtrlCreateButton("?", 320, 113, 20, 20)
 	GUICtrlSetFont($idBtnFirewallInfo, 10, 400, 0, "Arial")
 	GUICtrlSetResizing($idBtnFirewallInfo, $GUI_DOCKAUTO)
-	$sCleanFirewallText = "FIREWALL"
+	$sCleanFirewallText = "防火墙"
 	$idLabelCleanFirewall = GUICtrlCreateLabel($sCleanFirewallText, 5, 115, 580, 20, $SS_CENTER)
 	GUICtrlSetFont($idLabelCleanFirewall, 10, 700)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnCreateFW = GUICtrlCreateButton("Add Rules", 10, 140, 140, 30)
-	GUICtrlSetTip(-1, "Add new firewall rules")
+	$idBtnCreateFW = GUICtrlCreateButton("添加规则", 10, 140, 140, 30)
+	GUICtrlSetTip(-1, "添加防火墙规则阻止 Adobe 软件联网")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnToggleFW = GUICtrlCreateButton("Toggle Rules", 155, 140, 140, 30)
-	GUICtrlSetTip(-1, "Enable/Disable all GenP firewall rules")
+	$idBtnToggleFW = GUICtrlCreateButton("启用/禁用规则", 155, 140, 140, 30)
+	GUICtrlSetTip(-1, "启用/禁用所有 GenP 防火墙规则")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnRemoveFW = GUICtrlCreateButton("Remove Rules", 300, 140, 140, 30)
-	GUICtrlSetTip(-1, "Remove all GenP firewall rules")
+	$idBtnRemoveFW = GUICtrlCreateButton("删除规则", 300, 140, 140, 30)
+	GUICtrlSetTip(-1, "删除所有 GenP 防火墙规则")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnOpenWF = GUICtrlCreateButton("Open Windows Firewall", 445, 140, 140, 30)
-	GUICtrlSetTip(-1, "Open Windows Firewall with Advanced Security console")
+	$idBtnOpenWF = GUICtrlCreateButton("打开防火墙控制台", 445, 140, 140, 30)
+	GUICtrlSetTip(-1, "打开高级安全 Windows 防火墙控制台")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	; --- Hosts ---
 	$idBtnHostsInfo = GUICtrlCreateButton("?", 320, 188, 20, 20)
 	GUICtrlSetFont($idBtnHostsInfo, 10, 400, 0, "Arial")
 	GUICtrlSetResizing($idBtnHostsInfo, $GUI_DOCKAUTO)
-	$sEditHostsText = "HOSTS"
+	$sEditHostsText = "Hosts"
 	$idLabelEditHosts = GUICtrlCreateLabel($sEditHostsText, 5, 190, 580, 20, $SS_CENTER)
 	GUICtrlSetFont($idLabelEditHosts, 10, 700)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnUpdateHosts = GUICtrlCreateButton("Update hosts", 10, 215, 140, 30)
-	GUICtrlSetTip(-1, "Update hosts with domains from hosts list URL")
+	$idBtnUpdateHosts = GUICtrlCreateButton("更新 hosts", 10, 215, 140, 30)
+	GUICtrlSetTip(-1, "下载最新的屏蔽列表并添加到 hosts 文件中")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnEditHosts = GUICtrlCreateButton("Edit hosts", 155, 215, 140, 30)
-	GUICtrlSetTip(-1, "Manually edit hosts in notepad")
+	$idBtnEditHosts = GUICtrlCreateButton("编辑 hosts", 155, 215, 140, 30)
+	GUICtrlSetTip(-1, "打开记事本编辑 hosts 文件")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnCleanHosts = GUICtrlCreateButton("Clean hosts", 300, 215, 140, 30)
-	GUICtrlSetTip(-1, "Remove hosts added by GenP")
+	$idBtnCleanHosts = GUICtrlCreateButton("清理 hosts", 300, 215, 140, 30)
+	GUICtrlSetTip(-1, "删除 GenP 所添加的 hosts 屏蔽条目")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnRestoreHosts = GUICtrlCreateButton("Restore hosts", 445, 215, 140, 30)
+	$idBtnRestoreHosts = GUICtrlCreateButton("还原 hosts", 445, 215, 140, 30)
 	GUICtrlSetState($idBtnRestoreHosts, $GUI_DISABLE)
-	GUICtrlSetTip(-1, "Restore hosts from hosts.bak")
+	GUICtrlSetTip(-1, "从备份 hosts.bak 还原 hosts 文件")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	; --- Runtime Installer ---
-	$idBtnRuntimeInfo = GUICtrlCreateButton("?", 365, 263, 20, 20)
+	$idBtnRuntimeInfo = GUICtrlCreateButton("?", 375, 263, 20, 20)
 	GUICtrlSetFont($idBtnRuntimeInfo, 10, 400, 0, "Arial")
 	GUICtrlSetResizing($idBtnRuntimeInfo, $GUI_DOCKAUTO)
-	$sRuntimeInstallerText = "RUNTIME INSTALLER"
+	$sRuntimeInstallerText = "RuntimeInstaller组件"
 	$idLabelRuntimeInstaller = GUICtrlCreateLabel($sRuntimeInstallerText, 5, 265, 580, 20, $SS_CENTER)
 	GUICtrlSetFont($idLabelRuntimeInstaller, 10, 700)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnToggleRuntimeInstaller = GUICtrlCreateButton("Unpack", 225, 290, 140, 30)
-	GUICtrlSetTip(-1, "Unpack RuntimeInstaller.dll")
+	$idBtnToggleRuntimeInstaller = GUICtrlCreateButton("UPX 解包", 225, 290, 140, 30)
+	GUICtrlSetTip(-1, "解除 RuntimeInstaller.dll 的 UPX 保护")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	; --- WinTrust ---
-	$idBtnWintrustInfo = GUICtrlCreateButton("?", 333, 338, 20, 20)
+	$idBtnWintrustInfo = GUICtrlCreateButton("?", 345, 338, 20, 20)
 	GUICtrlSetFont($idBtnWintrustInfo, 10, 400, 0, "Arial")
 	GUICtrlSetResizing($idBtnWintrustInfo, $GUI_DOCKAUTO)
-	$sWinTrustText = "WINTRUST"
+	$sWinTrustText = "WinTrust验证"
 	$idLabelWinTrust = GUICtrlCreateLabel($sWinTrustText, 5, 340, 580, 20, $SS_CENTER)
 	GUICtrlSetFont($idLabelWinTrust, 10, 700)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnToggleWinTrust = GUICtrlCreateButton("Toggle WinTrust", 155, 365, 140, 30)
-	GUICtrlSetTip(-1, "Enable/disable wintrust.dll override")
+	$idBtnToggleWinTrust = GUICtrlCreateButton("配置 WinTrust 修改", 155, 365, 140, 30)
+	GUICtrlSetTip(-1, "通过替换 wintrust.dll 来绕过验证")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
-	$idBtnDevOverride = GUICtrlCreateButton("Toggle Reg Key", 300, 365, 140, 30)
-	GUICtrlSetTip(-1, "Add/remove DevOverrideEnable registry key")
+	$idBtnDevOverride = GUICtrlCreateButton("配置注册表项修改", 300, 365, 140, 30)
+	GUICtrlSetTip(-1, "设置 DevOverrideEnable 注册表项来允许优先加载本地文件夹的 DLL")
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
 	$g_idHyperlinkPopup = GUICtrlCreateLabel("gen.paramore.su", (595 - 160) / 2, 483, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
@@ -863,17 +863,17 @@ Func MainGui()
 
 	GUICtrlCreateTabItem("")
 
-	$hLogTab = GUICtrlCreateTabItem("Log")
+	$hLogTab = GUICtrlCreateTabItem("日志")
 	$idMemo = GUICtrlCreateEdit("", 10, 35, 575, 355, BitOR($ES_READONLY, $ES_CENTER, $WS_DISABLED))
 	GUICtrlSetResizing(-1, $GUI_DOCKVCENTER)
 
 	$idLog = GUICtrlCreateEdit("", 10, 35, 575, 355, BitOR($WS_VSCROLL, $ES_AUTOVSCROLL, $ES_READONLY))
 	GUICtrlSetResizing(-1, $GUI_DOCKVCENTER)
 	GUICtrlSetState($idLog, $GUI_HIDE)
-	GUICtrlSetData($idLog, "Activity Log" & @CRLF & "- - - - - - - - - - -" & @CRLF & @CRLF & "GenP Version: " & $g_Version & "" & @CRLF & "Config Version: " & $ConfigVerVar & "" & @CRLF)
+	GUICtrlSetData($idLog, "操作日志" & @CRLF & "- - - - - - - - - - -" & @CRLF & @CRLF & "GenP 版本: " & $g_Version & "" & @CRLF & "配置版本: " & $ConfigVerVar & "" & @CRLF)
 
-	$idBtnCopyLog = GUICtrlCreateButton("Copy", 257, 430, 80, 30)
-	GUICtrlSetTip(-1, "Copy log to clipboard")
+	$idBtnCopyLog = GUICtrlCreateButton("复制", 257, 430, 80, 30)
+	GUICtrlSetTip(-1, "将日志内容复制到剪贴板")
 	GUICtrlSetImage(-1, "imageres.dll", -77, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
@@ -885,7 +885,7 @@ Func MainGui()
 
 	GUICtrlCreateTabItem("")
 
-	MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Waiting for user action.")
+	MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作.")
 
 	GUICtrlSetState($idButtonSearch, 256) ; Set focus
 	GUISetState(@SW_SHOW)
@@ -895,7 +895,7 @@ Func MainGui()
 EndFunc   ;==>MainGui
 
 Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
-	_GUICtrlListView_SetItemText($idListview, 1, "Searching for files.", 1)
+	_GUICtrlListView_SetItemText($idListview, 1, "正在扫描文件.", 1)
 	Local $RecursiveFileSearch_MaxDeep = 8
 	If $DEPTH > $RecursiveFileSearch_MaxDeep Then Return
 
@@ -951,9 +951,9 @@ Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 
 	; Lazy screen updates
 	If 1 = Random(0, 10, 1) Then
-		MemoWrite(@CRLF & "Searching in " & $FileCount & " files" & @TAB & @TAB & "Found : " & UBound($FilesToPatch) & @CRLF & _
+		MemoWrite(@CRLF & "共 " & $FileCount & " 个文件" & @TAB & @TAB & "已找到: " & UBound($FilesToPatch) & @CRLF & _
 				"---" & @CRLF & _
-				"Level: " & $DEPTH & " Time elapsed : " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s)" & @TAB & @TAB & "Excluded because of *.bak: " & UBound($FilesToRestore) & @CRLF & _
+				"深度: " & $DEPTH & " 用时: " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒" & @TAB & @TAB & "排除 *.bak: " & UBound($FilesToRestore) & @CRLF & _
 				"---" & @CRLF & _
 				$INSTARTDIR _
 				)
@@ -969,7 +969,7 @@ Func FillListViewWithInfo()
 	_GUICtrlListView_SetExtendedListViewStyle($idListview, BitOR($LVS_EX_FULLROWSELECT, $LVS_EX_GRIDLINES, $LVS_EX_DOUBLEBUFFER))
 
 	_Expand_All_Click()
-	_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+	_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
 	; Add items
 	For $i = 0 To 5
@@ -979,10 +979,10 @@ Func FillListViewWithInfo()
 
 	_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
 	_GUICtrlListView_AddSubItem($idListview, 1, "GenP", 1)
-	_GUICtrlListView_AddSubItem($idListview, 2, "Originally created by uncia", 1)
+	_GUICtrlListView_AddSubItem($idListview, 2, "原版作者 uncia", 1)
 	_GUICtrlListView_AddSubItem($idListview, 3, '---------------', 1)
-	_GUICtrlListView_AddSubItem($idListview, 4, "Press 'Search' to find installed products; 'Patch' to patch selected products/files", 1)
-	_GUICtrlListView_AddSubItem($idListview, 5, "Current search path: " & $MyDefPath & " -- press 'Path' to change", 1)
+	_GUICtrlListView_AddSubItem($idListview, 4, "点击 '扫描' 扫描安装的软件; 点击 '修补' 修补所选的软件/文件", 1)
+	_GUICtrlListView_AddSubItem($idListview, 5, "当前扫描路径: " & $MyDefPath & " -- 点击 '路径' 来选择路径", 1)
 
 	$fFilesListed = 0
 
@@ -1002,13 +1002,13 @@ Func FillListViewWithFiles()
 		Next
 		_GUICtrlListView_AddArray($idListview, $aItems)
 
-		MemoWrite(@CRLF & UBound($FilesToPatch) & " File(s) were found in " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s) at:" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Press the 'Patch Files'")
-		LogWrite(1, UBound($FilesToPatch) & " File(s) were found in " & Round(TimerDiff($timestamp) / 1000, 0) & " second(s)" & @CRLF)
+		MemoWrite(@CRLF & "共找到 " & UBound($FilesToPatch) & " 个文件 耗时 " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒 文件位于:" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "请点击 '修补'")
+		LogWrite(1, "共找到 " & UBound($FilesToPatch) & " 个文件，耗时 " & Round(TimerDiff($timestamp) / 1000, 0) & " 秒" & @CRLF)
 		;_ArrayDisplay($FilesToPatch)
 		$fFilesListed = 1
 	Else
-		MemoWrite(@CRLF & "Nothing was found in" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
-		LogWrite(1, "Nothing was found in " & $MyDefPath)
+		MemoWrite(@CRLF & "找不到目标" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
+		LogWrite(1, "找不到目标 " & $MyDefPath)
 		$fFilesListed = 0
 	EndIf
 
@@ -1062,7 +1062,7 @@ EndFunc   ;==>ProgressWrite
 
 Func MyFileOpenDialog()
 	; Create a constant variable in Local scope of the message to display in FileOpenDialog.
-	Local Const $sMessage = "Select a Path"
+	Local Const $sMessage = "请选择路径"
 
 	; Display an open dialog to select a file.
 	Local $MyTempPath = FileSelectFolder($sMessage, $MyDefPath, 0, $MyDefPath, $MyhGUI)
@@ -1071,7 +1071,7 @@ Func MyFileOpenDialog()
 	If @error Then
 		; Display the error message.
 		;MsgBox($MB_SYSTEMMODAL, "", "No folder was selected.")
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "waiting for user action")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "等待用户操作")
 
 	Else
 		GUICtrlSetState($idBtnCure, 128)
@@ -1087,12 +1087,12 @@ Func MyFileOpenDialog()
 		_GUICtrlListView_AddItem($idListview, "", 5)
 		_GUICtrlListView_AddItem($idListview, "", 6)
 		_GUICtrlListView_AddSubItem($idListview, 0, "", 1)
-		_GUICtrlListView_AddSubItem($idListview, 1, "Path:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 1, "路径:", 1)
 		_GUICtrlListView_AddSubItem($idListview, 2, " " & $MyDefPath, 1)
-		_GUICtrlListView_AddSubItem($idListview, 3, "Step 1:", 1)
-		_GUICtrlListView_AddSubItem($idListview, 4, " Press 'Search' - wait until search completes", 1)
-		_GUICtrlListView_AddSubItem($idListview, 5, "Step 2:", 1)
-		_GUICtrlListView_AddSubItem($idListview, 6, " Press 'Patch' - wait until patching completes", 1)
+		_GUICtrlListView_AddSubItem($idListview, 3, "第一步:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 4, " 点击 '扫描' - 等待扫描完成", 1)
+		_GUICtrlListView_AddSubItem($idListview, 5, "第二步:", 1)
+		_GUICtrlListView_AddSubItem($idListview, 6, " 点击 '修补' - 等待修补完成", 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 0, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 1, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 2, 1)
@@ -1100,9 +1100,9 @@ Func MyFileOpenDialog()
 		_GUICtrlListView_SetItemGroupID($idListview, 4, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 5, 1)
 		_GUICtrlListView_SetItemGroupID($idListview, 6, 1)
-		_GUICtrlListView_SetGroupInfo($idListview, 1, "Info", 1, $LVGS_COLLAPSIBLE)
+		_GUICtrlListView_SetGroupInfo($idListview, 1, "信息", 1, $LVGS_COLLAPSIBLE)
 
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "Press the Search button")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyDefPath & @CRLF & "---" & @CRLF & "点击扫描按钮")
 		; Display the selected folder.
 		;MsgBox($MB_SYSTEMMODAL, "", "You chose the following folder:" & @CRLF & $MyDefPath)
 		GUICtrlSetState($idBtnUpdateHosts, 64)
@@ -1148,8 +1148,8 @@ Func MyGlobalPatternSearch($MyFileToParse)
 	Local $sFileName = StringRegExpReplace($MyFileToParse, "^.*\\", "")
 	Local $sExt = StringRegExpReplace($sFileName, "^.*\.", "")
 
-	MemoWrite(@CRLF & $MyFileToParse & @CRLF & "---" & @CRLF & "Preparing to Analyze" & @CRLF & "---" & @CRLF & "*****")
-	LogWrite(1, "Checking File: " & $sFileName & " ")
+	MemoWrite(@CRLF & $MyFileToParse & @CRLF & "---" & @CRLF & "分析中" & @CRLF & "---" & @CRLF & "*****")
+	LogWrite(1, "正在检查文件: " & $sFileName & " ")
 	;MsgBox($MB_SYSTEMMODAL,"","$sFileName = " & $sFileName & @CRLF & "$sExt = " & $sExt)
 
 	If $sExt = "exe" Then
@@ -1175,10 +1175,10 @@ Func MyGlobalPatternSearch($MyFileToParse)
 
 	If StringInStr($sSpecialFiles, $sFileName) Then
 		;MsgBox($MB_SYSTEMMODAL, "", "Special File: " & $sFileName)
-		LogWrite(0, " - using Custom Patterns")
+		LogWrite(0, " - 使用自定义特征")
 		ExecuteSearchPatterns($sFileName, 0, $MyFileToParse)
 	Else
-		LogWrite(0, " - using Default Patterns")
+		LogWrite(0, " - 使用默认特征")
 		ExecuteSearchPatterns($sFileName, 1, $MyFileToParse)
 		;MsgBox($MB_SYSTEMMODAL, "", "File: " & $sFileName & @CRLF & "Not in Special Files")
 	EndIf
@@ -1209,12 +1209,12 @@ Func ExecuteSearchPatterns($FileName, $DefaultPatterns, $MyFileToParse)
 
 				$iPatternLength = StringLen($sSearch)
 				If $iPatternLength <> StringLen($sReplace) Or Mod($iPatternLength, 2) <> 0 Then
-					MsgBox($MB_SYSTEMMODAL, "Error", "Pattern Error in config.ini:" & $sPattern & @CRLF & $sSearch & @CRLF & $sReplace)
+					MsgBox($MB_SYSTEMMODAL, "错误", "配置文件 config.ini 中的特征有误:" & $sPattern & @CRLF & $sSearch & @CRLF & $sReplace)
 					Exit
 				EndIf
 
 				;MsgBox(0,0, $MyFileToParse & @CRLF & $sSearch & @CRLF  & $aReplace & @CRLF  & $sPattern )
-				LogWrite(1, "Searching for: " & $sPattern & ": " & $sSearch)
+				LogWrite(1, "正在查找: " & $sPattern & ": " & $sSearch)
 
 				MyRegExpGlobalPatternSearch($MyFileToParse, $sSearch, $sReplace, $sPattern)
 
@@ -1242,13 +1242,13 @@ Func MyRegExpGlobalPatternSearch($FileToParse, $PatternToSearch, $PatternToRepla
 
 	If $sz_type = "0x4C01" And StringInStr($FileToParse, "Acrobat", 2) > 0 Then ; Acrobat x86 won't work with this script
 
-		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "File is 32-bit. Aborting..." & @CRLF & "---")
+		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "程序文件为 32 位，终止操作..." & @CRLF & "---")
 		FileClose($hFileOpen)
 		Sleep(100)
 		$bFoundAcro32 = True
 
 	ElseIf $sz_type = "0x64AA" Then
-		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "File is ARM. Aborting..." & @CRLF & "---")
+		MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & "程序文件为 ARM 架构，终止操作..." & @CRLF & "---")
 		FileClose($hFileOpen)
 		Sleep(100)
 		$bFoundGenericARM = True
@@ -1319,11 +1319,11 @@ Func MyRegExpGlobalPatternSearch($FileToParse, $PatternToSearch, $PatternToRepla
 				ConsoleWrite($PatternName & "---" & @TAB & $sWildcardSearchPattern & "	" & @CRLF)
 				ConsoleWrite($PatternName & "R" & "--" & @TAB & $sFinalReplacePattern & "	" & @CRLF)
 				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & @CRLF & "---" & @CRLF & $sWildcardSearchPattern & @CRLF & $sFinalReplacePattern)
-				LogWrite(1, "Replacing with: " & $sFinalReplacePattern)
+				LogWrite(1, "替换为: " & $sFinalReplacePattern)
 
 			Else
-				ConsoleWrite($PatternName & "---" & @TAB & "No" & "	" & @CRLF)
-				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & "---" & "No")
+				ConsoleWrite($PatternName & "---" & @TAB & "无" & "	" & @CRLF)
+				MemoWrite(@CRLF & $FileToParse & @CRLF & "---" & @CRLF & $PatternName & "---" & "无")
 			EndIf
 			$MyRegExpGlobalPatternSearchCount += 1
 
@@ -1347,7 +1347,7 @@ Func MyGlobalPatternPatch($MyFileToPatch, $MyArrayToPatch)
 	;MemoWrite("Current path" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "medication :)")
 	Local $iRows = UBound($MyArrayToPatch) ; Total number of rows
 	If $iRows > 0 Then
-		MemoWrite(@CRLF & "Path" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "medication :)")
+		MemoWrite(@CRLF & "路径" & @CRLF & "---" & @CRLF & $MyFileToPatch & @CRLF & "---" & @CRLF & "开始用药 :)")
 		Local $hFileOpen = FileOpen($MyFileToPatch, $FO_READ + $FO_BINARY)
 		Local $sFileRead = FileRead($hFileOpen)
 		Local $sStringOut
@@ -1369,12 +1369,12 @@ Func MyGlobalPatternPatch($MyFileToPatch, $MyArrayToPatch)
 		Sleep(100)
 		;MemoWrite1(@CRLF & "---" & @CRLF & "Waitng for your command :)" & @CRLF & "---")
 
-		LogWrite(1, "File patched by GenP " & $g_Version & " + config " & $ConfigVerVar)
+		LogWrite(1, "文件已由 GenP " & $g_Version & " + 配置 " & $ConfigVerVar & " 修补")
 		If $bEnableMD5 = 1 Then
 			_Crypt_Startup()
 			Local $sMD5Checksum = _Crypt_HashFile($MyFileToPatch, $CALG_MD5)
 			If Not @error Then
-				LogWrite(1, "MD5 Checksum: " & $sMD5Checksum & @CRLF)
+				LogWrite(1, "MD5 校验值: " & $sMD5Checksum & @CRLF)
 			EndIf
 			_Crypt_Shutdown()
 		EndIf
@@ -1382,10 +1382,10 @@ Func MyGlobalPatternPatch($MyFileToPatch, $MyArrayToPatch)
 	Else
 		;Empty array - > no search-replace patterns
 		;File is already patched or no patterns were found .
-		MemoWrite(@CRLF & "No patterns were found" & @CRLF & "---" & @CRLF & "or" & @CRLF & "---" & @CRLF & "file is already patched.")
+		MemoWrite(@CRLF & "找不到特征" & @CRLF & "---" & @CRLF & "或者" & @CRLF & "---" & @CRLF & "文件已经修补过了.")
 		Sleep(100)
 
-		LogWrite(1, "No patterns were found or file already patched." & @CRLF)
+		LogWrite(1, "找不到特征或文件已经修补过了." & @CRLF)
 
 	EndIf
 	;Sleep(100)
@@ -1402,14 +1402,14 @@ Func RestoreFile($MyFileToDelete)
 		FileDelete($MyFileToDelete)
 		FileMove($MyFileToDelete & ".bak", $MyFileToDelete, $FC_OVERWRITE)
 		Sleep(100)
-		MemoWrite(@CRLF & "File restored" & @CRLF & "---" & @CRLF & $MyFileToDelete)
+		MemoWrite(@CRLF & "文件已还原" & @CRLF & "---" & @CRLF & $MyFileToDelete)
 		LogWrite(1, $MyFileToDelete)
-		LogWrite(1, "File restored.")
+		LogWrite(1, "文件已还原.")
 	Else
 		Sleep(100)
-		MemoWrite(@CRLF & "No backup file found" & @CRLF & "---" & @CRLF & $MyFileToDelete)
+		MemoWrite(@CRLF & "未找到备份文件" & @CRLF & "---" & @CRLF & $MyFileToDelete)
 		LogWrite(1, $MyFileToDelete)
-		LogWrite(1, "No backup file found.")
+		LogWrite(1, "未找到备份文件.")
 	EndIf
 EndFunc   ;==>RestoreFile
 
@@ -1534,7 +1534,7 @@ Func _Assign_Groups_To_Found_Files()
 			Case StringInStr($ItemFromList, "Substance 3D Viewer")
 				$sGroupName = "Substance 3D Viewer"
 			Case Else
-				$sGroupName = "Else"
+				$sGroupName = "其他"
 		EndSelect
 
 		ConsoleWrite("Group Name Assigned: " & $sGroupName & @CRLF)
@@ -1709,7 +1709,7 @@ Func SaveOptionsToConfig()
 	If $sNewDomainListURL = "" Then
 		$sNewDomainListURL = $sDefaultDomainListURL
 		GUICtrlSetData($idCustomDomainListInput, $sNewDomainListURL)
-		MsgBox(0, "Empty URL", "The custom domain list URL cannot be empty. Default URL set.")
+		MsgBox(0, "未填写 URL", "自定义屏蔽域名列表下载地址不能为空，已使用默认地址。")
 	EndIf
 
 	If $sNewDomainListURL <> $sCurrentDomainListURL Then
@@ -1755,7 +1755,7 @@ EndFunc   ;==>ShowInfoPopup
 Func RemoveAGS()
 	GUICtrlSetState($idBtnRemoveAGS, $GUI_DISABLE)
 	_GUICtrlTab_SetCurFocus($hTab, 3)
-	MemoWrite(@CRLF & "Removing AGS from this Computer" & @CRLF & "---" & @CRLF & "Please wait...")
+	MemoWrite(@CRLF & "正在删除 AGS" & @CRLF & "---" & @CRLF & "请稍候...")
 
 	Local $aServices = ["AGMService", "AGSService"]
 	Local $ProgramFilesX86 = EnvGet("ProgramFiles(x86)")
@@ -1778,26 +1778,26 @@ Func RemoveAGS()
 	For $sService In $aServices
 		Local $iExistCode = RunWait("sc query " & $sService, "", @SW_HIDE)
 		If $iExistCode = 1060 Then
-			LogWrite(1, "Service not found: " & $sService)
+			LogWrite(1, "服务不存在: " & $sService)
 			ContinueLoop
 		ElseIf $iExistCode <> 0 Then
-			LogWrite(1, "Error checking service " & $sService & " (exit code: " & $iExistCode & ")")
+			LogWrite(1, "无法检查服务 " & $sService & " (退出错误代码: " & $iExistCode & ")")
 			ContinueLoop
 		EndIf
-		LogWrite(1, "Service found: " & $sService)
+		LogWrite(1, "服务已找到: " & $sService)
 
 		Local $iStopPID = Run("sc stop " & $sService, "", @SW_HIDE, $STDERR_CHILD)
 		Local $iTimeout = 10000
 		Local $iWaitResult = ProcessWaitClose($iStopPID, $iTimeout)
 		If $iWaitResult = 0 Then
 			ProcessClose($iStopPID)
-			LogWrite(1, "Warning: Failed to stop " & $sService & " - timed out after " & $iTimeout & "ms")
+			LogWrite(1, "警告: 无法停止 " & $sService & " - 操作超时 " & $iTimeout & "ms")
 		Else
 			Local $iStopCode = @error ? 1 : 0
 			If $iStopCode = 0 Or StringInStr(StderrRead($iStopPID), "1052") Then
-				LogWrite(1, "Service stopped: " & $sService)
+				LogWrite(1, "服务已停止: " & $sService)
 			Else
-				LogWrite(1, "Failed to stop service " & $sService & " (possible error)")
+				LogWrite(1, "无法停止服务 " & $sService & " (可能存在错误)")
 			EndIf
 		EndIf
 
@@ -1805,14 +1805,14 @@ Func RemoveAGS()
 		$iWaitResult = ProcessWaitClose($iDeletePID, $iTimeout)
 		If $iWaitResult = 0 Then
 			ProcessClose($iDeletePID)
-			LogWrite(1, "Warning: Failed to delete " & $sService & " - timed out after " & $iTimeout & "ms")
+			LogWrite(1, "警告: 无法删除 " & $sService & " - 操作超时 " & $iTimeout & "ms")
 		Else
 			Local $iDeleteCode = @error ? 1 : 0
 			If $iDeleteCode = 0 Then
-				LogWrite(1, "Service deleted: " & $sService)
+				LogWrite(1, "服务已删除: " & $sService)
 				$iServiceSuccess += 1
 			Else
-				LogWrite(1, "Failed to delete service " & $sService & " (possible error)")
+				LogWrite(1, "无法删除服务 " & $sService & " (可能存在错误)")
 			EndIf
 		EndIf
 	Next
@@ -1822,26 +1822,26 @@ Func RemoveAGS()
 		If FileExists($sPath) Then
 			If StringInStr(FileGetAttrib($sPath), "D") Then
 				If DirRemove($sPath, 1) Then
-					LogWrite(1, "Deleted directory: " & $sPath)
+					LogWrite(1, "已删除文件夹: " & $sPath)
 					$iFileSuccess += 1
 				Else
-					LogWrite(1, "Failed to delete directory: " & $sPath)
+					LogWrite(1, "无法删除文件夹: " & $sPath)
 				EndIf
 			Else
 				If FileDelete($sPath) Then
-					LogWrite(1, "Deleted file: " & $sPath)
+					LogWrite(1, "已删除文件: " & $sPath)
 					$iFileSuccess += 1
 				Else
-					LogWrite(1, "Failed to delete file: " & $sPath)
+					LogWrite(1, "无法删除文件: " & $sPath)
 				EndIf
 			EndIf
 		Else
-			LogWrite(1, "File or folder not found: " & $sPath)
+			LogWrite(1, "不存在: " & $sPath)
 		EndIf
 	Next
 
-	MemoWrite("AGS removal completed. Successfully processed " & $iServiceSuccess & " of " & UBound($aServices) & " services and " & $iFileSuccess & " of " & UBound($aPaths) & " files.")
-	LogWrite(1, "AGS removal completed. Services: " & $iServiceSuccess & "/" & UBound($aServices) & ", Files: " & $iFileSuccess & "/" & UBound($aPaths) & @CRLF)
+	MemoWrite("AGS 删除完成，已处理 " & $iServiceSuccess & " / " & UBound($aServices) & " 个服务和 " & $iFileSuccess & " / " & UBound($aPaths) & " 个文件.")
+	LogWrite(1, "AGS 删除完成。服务: " & $iServiceSuccess & "/" & UBound($aServices) & ", 文件: " & $iFileSuccess & "/" & UBound($aPaths) & @CRLF)
 	ToggleLog(1)
 	GUICtrlSetState($idBtnRemoveAGS, $GUI_ENABLE)
 EndFunc   ;==>RemoveAGS
@@ -1859,13 +1859,13 @@ Func RemoveHostsEntries()
 
 	Local $sHostsContent = FileRead($sHostsPath)
 	If @error Then
-		MemoWrite("Error reading hosts file." & @CRLF)
+		MemoWrite("无法读取 hosts 文件." & @CRLF)
 		FileSetAttrib($sHostsPath, "+R")
 		Return False
 	EndIf
 
 	If Not StringInStr($sHostsContent, $sMarkerStart) Or Not StringInStr($sHostsContent, $sMarkerEnd) Then
-		LogWrite(1, "No entries to remove." & @CRLF)
+		LogWrite(1, "未找到 Adobe 相关条目可删." & @CRLF)
 		FileSetAttrib($sHostsPath, "+R")
 		ToggleLog(1)
 		Return True
@@ -1875,7 +1875,7 @@ Func RemoveHostsEntries()
 
 	Local $hTempFile = FileOpen($sTempHosts, 2)
 	If $hTempFile = -1 Then
-		MemoWrite("Error creating temp hosts file for removal." & @CRLF)
+		MemoWrite("无法创建临时 hosts 文件." & @CRLF)
 		FileSetAttrib($sHostsPath, "+R")
 		Return False
 	EndIf
@@ -1883,8 +1883,8 @@ Func RemoveHostsEntries()
 	FileClose($hTempFile)
 
 	If Not FileCopy($sTempHosts, $sHostsPath, 1) Then
-		MemoWrite("Error writing updated hosts file." & @CRLF)
-		MemoWrite("Attempting to copy from: " & $sTempHosts & " to: " & $sHostsPath & @CRLF)
+		MemoWrite("无法写入更新后的 hosts 文件." & @CRLF)
+		MemoWrite("尝试从: " & $sTempHosts & " 复制到: " & $sHostsPath & @CRLF)
 		FileDelete($sTempHosts)
 		FileSetAttrib($sHostsPath, "+R")
 		Return False
@@ -1892,7 +1892,7 @@ Func RemoveHostsEntries()
 	FileDelete($sTempHosts)
 
 	FileSetAttrib($sHostsPath, "+R")
-	LogWrite(1, "Hosts file cleaned of existing entries." & @CRLF)
+	LogWrite(1, "已清理 hosts 中的 Adobe 条目." & @CRLF)
 	ToggleLog(1)
 	Return True
 EndFunc   ;==>RemoveHostsEntries
@@ -1903,7 +1903,7 @@ Func ScanDNSCache(ByRef $sHostsContent)
 
 	Local $sBlockSection = StringRegExp($sHostsContent, "(?s)" & $sMarkerStart & "(.*?)" & $sMarkerEnd, 1)
 	If @error Or UBound($sBlockSection) = 0 Then
-		MemoWrite("Error parsing blocklist from hosts content." & @CRLF)
+		MemoWrite("无法从 hosts 中解析 Adobe 屏蔽列表." & @CRLF)
 		Return 0
 	EndIf
 	Local $aCurrentDomains = StringSplit(StringStripWS($sBlockSection[0], 8), @CRLF, 2)
@@ -1923,12 +1923,12 @@ Func ScanDNSCache(ByRef $sHostsContent)
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: ipconfig /displaydns timed out after " & $iTimeout & "ms." & @CRLF)
+		MemoWrite("警告: ipconfig /displaydns 操作超时 " & $iTimeout & "ms." & @CRLF)
 	EndIf
 
 	Local $sDNSCache = FileRead($sTempDNS)
 	If @error Then
-		MemoWrite("Error reading DNS cache." & @CRLF)
+		MemoWrite("无法读取 DNS 缓存." & @CRLF)
 		FileDelete($sTempDNS)
 		Return 0
 	EndIf
@@ -1953,11 +1953,11 @@ Func ScanDNSCache(ByRef $sHostsContent)
 		Return 0
 	EndIf
 
-	Local $sPrompt = "Found " & UBound($aNewDomains) & " new domain(s) in DNS cache:" & @CRLF & _
-			_ArrayToString($aNewDomains, @CRLF) & @CRLF & "Add to hosts file?"
-	Local $iResponse = MsgBox($MB_YESNO + $MB_ICONQUESTION, "New Domains Detected", $sPrompt)
+	Local $sPrompt = "在 DNS 缓存中发现 " & UBound($aNewDomains) & " 个新的 adobestats.io 域名:" & @CRLF & _
+			_ArrayToString($aNewDomains, @CRLF) & @CRLF & "是否添加到 hosts 文件?"
+	Local $iResponse = MsgBox($MB_YESNO + $MB_ICONQUESTION, "检测到新域名", $sPrompt)
 	If $iResponse = $IDNO Then
-		MemoWrite("User declined to add new DNS domains." & @CRLF)
+		MemoWrite("用户拒绝添加新 DNS 域名." & @CRLF)
 		Return 0
 	EndIf
 
@@ -1968,7 +1968,7 @@ Func UpdateHostsFile()
 	_GUICtrlTab_SetCurFocus($hTab, 3)
 	RemoveHostsEntries()
 	GUICtrlSetState($idBtnUpdateHosts, $GUI_DISABLE)
-	MemoWrite(@CRLF & "Starting hosts file update..." & @CRLF)
+	MemoWrite(@CRLF & "开始更新 hosts 文件..." & @CRLF)
 
 	Local $sHostsPath = @WindowsDir & "\System32\drivers\etc\hosts"
 	Local $sBackupPath = $sHostsPath & ".bak"
@@ -1981,18 +1981,18 @@ Func UpdateHostsFile()
 
 	If Not FileExists($sBackupPath) Then
 		If Not FileCopy($sHostsPath, $sBackupPath, 1) Then
-			MemoWrite("Error creating hosts backup." & @CRLF)
+			MemoWrite("无法创建 hosts 文件备份." & @CRLF)
 			GUICtrlSetState($idBtnUpdateHosts, $GUI_ENABLE)
 			FileSetAttrib($sHostsPath, "+R")
 			Return
 		EndIf
-		MemoWrite("Hosts file backed up." & @CRLF)
+		MemoWrite("已备份 hosts 文件." & @CRLF)
 	EndIf
 
 	$sTempFileDownload = _TempFile(@TempDir & "\domain_list")
 	Local $iInetResult = InetGet($sDomainListURL, $sTempFileDownload, 1)
 	If @error Or $iInetResult = 0 Then
-		MemoWrite("Download Error: " & @error & ", InetGet Result: " & $iInetResult & @CRLF)
+		MemoWrite("下载失败: " & @error & ", InetGet 返回结果: " & $iInetResult & @CRLF)
 		FileDelete($sTempFileDownload)
 		GUICtrlSetState($idBtnUpdateHosts, $GUI_ENABLE)
 		FileSetAttrib($sHostsPath, "+R")
@@ -2000,11 +2000,11 @@ Func UpdateHostsFile()
 	EndIf
 	$sDomainList = FileRead($sTempFileDownload)
 	FileDelete($sTempFileDownload)
-	MemoWrite("Downloaded remote list:" & @CRLF & $sDomainList & @CRLF)
+	MemoWrite("已下载屏蔽列表:" & @CRLF & $sDomainList & @CRLF)
 
 	$sHostsContent = FileRead($sHostsPath)
 	If @error Then
-		MemoWrite("Error reading hosts file." & @CRLF)
+		MemoWrite("无法读取 hosts 文件." & @CRLF)
 		GUICtrlSetState($idBtnUpdateHosts, $GUI_ENABLE)
 		FileSetAttrib($sHostsPath, "+R")
 		Return
@@ -2018,7 +2018,7 @@ Func UpdateHostsFile()
 		$sHostsContent = $sNewContent
 	EndIf
 
-	MemoWrite(@CRLF & "Scanning DNS cache for additional (sub)domains..." & @CRLF)
+	MemoWrite(@CRLF & "正在扫描 DNS 缓存以查找更多 adobestats.io 子域名..." & @CRLF)
 	Local $aDNSDomainsAdded = ScanDNSCache($sHostsContent)
 	If IsArray($aDNSDomainsAdded) And UBound($aDNSDomainsAdded) > 0 Then
 		Local $sDNSEntries = ""
@@ -2026,16 +2026,16 @@ Func UpdateHostsFile()
 			$sDNSEntries &= "0.0.0.0 " & $aDNSDomainsAdded[$i] & @CRLF
 		Next
 		$sHostsContent = StringRegExpReplace($sHostsContent, "(?s)(" & $sMarkerStart & ".*?)(" & $sMarkerEnd & ")", "$1" & $sDNSEntries & "$2")
-		MemoWrite("Added from DNS cache:" & @CRLF & _ArrayToString($aDNSDomainsAdded, @CRLF) & @CRLF)
-		LogWrite(1, "Added from DNS cache: " & _ArrayToString($aDNSDomainsAdded, ", ") & @CRLF)
+		MemoWrite("从 DNS 缓存添加:" & @CRLF & _ArrayToString($aDNSDomainsAdded, @CRLF) & @CRLF)
+		LogWrite(1, "从 DNS 缓存添加: " & _ArrayToString($aDNSDomainsAdded, ", ") & @CRLF)
 	Else
-		MemoWrite("No new domains found in DNS cache." & @CRLF)
+		MemoWrite("在 DNS 缓存中未找到新的 adobestats.io 域名." & @CRLF)
 	EndIf
 
 	$hFile = FileOpen($sHostsPath, 2)
 	If $hFile = -1 Then
 		Local $iLastError = _WinAPI_GetLastError()
-		MemoWrite("Error opening hosts file for writing: Last Error = " & $iLastError & @CRLF)
+		MemoWrite("无法以追加模式打开 hosts 文件: 错误码 = " & $iLastError & @CRLF)
 		GUICtrlSetState($idBtnUpdateHosts, $GUI_ENABLE)
 		FileSetAttrib($sHostsPath, "+R")
 		Return
@@ -2044,7 +2044,7 @@ Func UpdateHostsFile()
 	FileClose($hFile)
 
 	FileSetAttrib($sHostsPath, "+R")
-	LogWrite(1, "Hosts file updated successfully." & @CRLF)
+	LogWrite(1, "成功更新 hosts 文件." & @CRLF)
 	ToggleLog(1)
 	GUICtrlSetState($idBtnUpdateHosts, $GUI_ENABLE)
 EndFunc   ;==>UpdateHostsFile
@@ -2061,7 +2061,7 @@ Func EditHosts()
 
 	Local $iPID = Run("notepad.exe " & $sHostsPath)
 	If $iPID = 0 Then
-		MemoWrite("Error launching Notepad." & @CRLF)
+		MemoWrite("无法启动记事本." & @CRLF)
 		FileSetAttrib($sHostsPath, "+R")
 		Return
 	EndIf
@@ -2070,7 +2070,7 @@ Func EditHosts()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Notepad timed out after " & $iTimeout / 1000 & " seconds." & @CRLF)
+		MemoWrite("警告: 记事本超时 " & $iTimeout / 1000 & " 秒." & @CRLF)
 	EndIf
 
 	FileSetAttrib($sHostsPath, "+R")
@@ -2078,7 +2078,7 @@ EndFunc   ;==>EditHosts
 
 Func RestoreHosts()
 	_GUICtrlTab_SetCurFocus($hTab, 3)
-	MemoWrite(@CRLF & "Restoring the hosts file from backup..." & @CRLF & "---" & @CRLF & "Please wait..." & @CRLF)
+	MemoWrite(@CRLF & "正在从备份中还原 hosts 文件..." & @CRLF & "---" & @CRLF & "请稍候..." & @CRLF)
 	Local $sHostsPath = @WindowsDir & "\System32\drivers\etc\hosts"
 	Local $sBackupPath = @WindowsDir & "\System32\drivers\etc\hosts.bak"
 
@@ -2087,14 +2087,14 @@ Func RestoreHosts()
 		If FileCopy($sBackupPath, $sHostsPath, 1) Then
 			FileSetAttrib($sHostsPath, "+R")
 			FileDelete($sBackupPath)
-			LogWrite(1, "Restoring the hosts file from backup: Success!" & @CRLF)
+			LogWrite(1, "从备份中还原 hosts 文件: 命令执行成功!" & @CRLF)
 		Else
-			MemoWrite("Error restoring hosts file from backup." & @CRLF)
+			MemoWrite("无法从备份中还原 hosts 文件." & @CRLF)
 			FileSetAttrib($sHostsPath, "+R")
-			LogWrite(1, "Restoring the hosts file from backup: Failed." & @CRLF)
+			LogWrite(1, "从备份中还原 hosts: 命令执行失败." & @CRLF)
 		EndIf
 	Else
-		LogWrite(1, "Restoring the hosts file from backup: No backup file found." & @CRLF)
+		LogWrite(1, "从备份中还原 hosts 文件: 未找到备份文件." & @CRLF)
 	EndIf
 	ToggleLog(1)
 EndFunc   ;==>RestoreHosts
@@ -2109,18 +2109,18 @@ Func CheckThirdPartyFirewall()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Third-party firewall check timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 第三方防火墙检查超时 " & $iTimeout & "ms.")
 	EndIf
 	$sOutput = StdoutRead($iPID)
 
 	$sOutput = StringStripWS($sOutput, 3)
 	If $sOutput <> "" Then
 		$g_sThirdPartyFirewall = $sOutput
-		MemoWrite("Third-party firewall detected: " & $g_sThirdPartyFirewall)
+		MemoWrite("检测到第三方防火墙: " & $g_sThirdPartyFirewall)
 		Return True
 	Else
 		$g_sThirdPartyFirewall = ""
-		MemoWrite("Windows Firewall is the default firewall.")
+		MemoWrite("Windows 防火墙已是默认防火墙.")
 		Return False
 	EndIf
 EndFunc   ;==>CheckThirdPartyFirewall
@@ -2128,8 +2128,8 @@ EndFunc   ;==>CheckThirdPartyFirewall
 Func FindApps($bForLocalDLL = False)
 	Local $tFirewallPaths = IniReadSection($sINIPath, "FirewallTrust")
 	If @error Then
-		MemoWrite("Error reading [FirewallTrust] section from config.")
-		LogWrite(1, "Error reading [FirewallTrust] section from config.")
+		MemoWrite("无法读取配置文件的 [FirewallTrust] 一节.")
+		LogWrite(1, "无法读取配置文件中的 [FirewallTrust] 一节.")
 		Local $empty[0]
 		Return $empty
 	EndIf
@@ -2198,7 +2198,7 @@ Func RuleExists($ruleName)
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		LogWrite(1, "Warning: Rule check for '" & $ruleName & "' timed out after " & $iTimeout & "ms.")
+		LogWrite(1, "警告: 规则 '" & $ruleName & "' 的检查超时 " & $iTimeout & "ms.")
 	EndIf
 	Local $sOutput = StdoutRead($iPID)
 	Return Number(StringStripWS($sOutput, 3)) > 0
@@ -2206,10 +2206,10 @@ EndFunc   ;==>RuleExists
 
 Func ShowFirewallStatus()
 	_GUICtrlTab_SetCurFocus($hTab, 3)
-	MemoWrite("Checking Windows Firewall status...")
-	LogWrite(1, "Checking Windows Firewall status...")
+	MemoWrite("正在检查 Windows 防火墙状态...")
+	LogWrite(1, "正在检查 Windows 防火墙状态...")
 
-	MemoWrite("Scanning firewall profiles...")
+	MemoWrite("正在扫描防火墙配置文件...")
 	Local $sProfileCmd = 'powershell.exe -Command "Get-NetFirewallProfile | Select-Object -Property Name,Enabled | Format-Table -HideTableHeaders"'
 	Local $iPID = Run(@ComSpec & " /c " & $sProfileCmd, "", @SW_HIDE, $STDOUT_CHILD + $STDERR_CHILD)
 	Local $sProfileOutput = ""
@@ -2217,7 +2217,7 @@ Func ShowFirewallStatus()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Firewall profile check timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 防火墙配置文件检查超时 " & $iTimeout & "ms.")
 	EndIf
 	$sProfileOutput = StdoutRead($iPID)
 
@@ -2230,25 +2230,25 @@ Func ShowFirewallStatus()
 			If @error = 0 Then
 				Local $profileName = $aParts[0]
 				Local $enabled = $aParts[1]
-				$sProfileSummary &= $profileName & ": " & ($enabled = "True" ? "Enabled" : "Disabled") & @CRLF
+				$sProfileSummary &= $profileName & ": " & ($enabled = "True" ? "已启用" : "已禁用") & @CRLF
 			EndIf
 		EndIf
 	Next
-	MemoWrite("Firewall Profiles:" & @CRLF & StringTrimRight($sProfileSummary, StringLen(@CRLF)))
-	LogWrite(1, "Firewall Profiles - " & StringReplace(StringTrimRight($sProfileSummary, StringLen(@CRLF)), @CRLF, " | "))
+	MemoWrite("防火墙配置文件:" & @CRLF & StringTrimRight($sProfileSummary, StringLen(@CRLF)))
+	LogWrite(1, "防火墙配置文件 - " & StringReplace(StringTrimRight($sProfileSummary, StringLen(@CRLF)), @CRLF, " | "))
 
-	MemoWrite("Checking firewall service...")
+	MemoWrite("正在检查防火墙服务...")
 	Local $sServiceCmd = 'powershell.exe -Command "Get-Service MpsSvc | Select-Object -Property Status,DisplayName | Format-List"'
 	$iPID = Run(@ComSpec & " /c " & $sServiceCmd, "", @SW_HIDE, $STDOUT_CHILD + $STDERR_CHILD)
 	Local $sServiceOutput = ""
 	$iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Firewall service check timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 防火墙服务检查超时 " & $iTimeout & "ms.")
 	EndIf
 	$sServiceOutput = StdoutRead($iPID)
 
-	Local $sServiceStatus = "Unknown"
+	Local $sServiceStatus = "未知"
 	Local $aServiceLines = StringSplit(StringStripWS($sServiceOutput, 3), @CRLF, 1)
 	For $line In $aServiceLines
 		If StringInStr($line, "Status") Then
@@ -2259,24 +2259,24 @@ Func ShowFirewallStatus()
 			ExitLoop
 		EndIf
 	Next
-	MemoWrite("Firewall Service (MpsSvc): " & $sServiceStatus)
-	LogWrite(1, "Firewall Service (MpsSvc): " & $sServiceStatus)
+	MemoWrite("防火墙服务 (MpsSvc): " & $sServiceStatus)
+	LogWrite(1, "防火墙服务 (MpsSvc): " & $sServiceStatus)
 EndFunc   ;==>ShowFirewallStatus
 
 Func RemoveFirewallRules()
 	_GUICtrlTab_SetCurFocus($hTab, 3)
-	MemoWrite("Starting firewall rule removal process...")
-	LogWrite(1, "Starting firewall rule removal process.")
+	MemoWrite("开始删除防火墙规则...")
+	LogWrite(1, "开始删除防火墙规则.")
 
 	If CheckThirdPartyFirewall() Then
-		MemoWrite("Third-party firewall detected. Cannot remove rules.")
-		LogWrite(1, "Third-party firewall detected" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". This option only supports Windows Firewall.")
-		LogWrite(1, "Firewall rule removal process completed." & @CRLF)
+		MemoWrite("检测到第三方防火墙，不支持删除规则.")
+		LogWrite(1, "检测到第三方防火墙" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". 此功能仅支持 Windows 防火墙.")
+		LogWrite(1, "已完成防火墙规则删除任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("Scanning for firewall rules...")
+	MemoWrite("正在扫描防火墙规则...")
 	Local $sCmd = 'powershell.exe -Command "Get-NetFirewallRule -Direction Outbound | Where-Object { $_.DisplayName -like ''Adobe-Block*'' } | Select-Object -Property DisplayName"'
 	Local $iPID = Run(@ComSpec & " /c " & $sCmd, "", @SW_HIDE, $STDOUT_CHILD + $STDERR_CHILD)
 	Local $sOutput = ""
@@ -2284,7 +2284,7 @@ Func RemoveFirewallRules()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Rule scan timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 规则扫描超时 " & $iTimeout & "ms.")
 	EndIf
 	$sOutput = StdoutRead($iPID)
 
@@ -2295,15 +2295,15 @@ Func RemoveFirewallRules()
 	Next
 
 	If $iRuleCount = 0 Then
-		MemoWrite("No firewall rules found.")
-		LogWrite(1, "No firewall rules found to remove.")
-		LogWrite(1, "Firewall rule removal process completed." & @CRLF)
+		MemoWrite("未找到防火墙规则.")
+		LogWrite(1, "未找到要删除的防火墙规则.")
+		LogWrite(1, "已完成防火墙规则删除任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("Removing " & $iRuleCount & " rule(s)...")
-	LogWrite(1, "Removing " & $iRuleCount & " rule(s):")
+	MemoWrite("删除 " & $iRuleCount & " 条规则...")
+	LogWrite(1, "删除 " & $iRuleCount & " 条规则:")
 	For $i = 1 To $aRules[0]
 		If StringInStr($aRules[$i], "Adobe-Block") Then
 			LogWrite(1, "- " & StringStripWS($aRules[$i], 3))
@@ -2315,50 +2315,50 @@ Func RemoveFirewallRules()
 	$iWaitResult = ProcessWaitClose($iPIDRemove, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPIDRemove)
-		MemoWrite("Warning: Rule removal timed out after " & $iTimeout & "ms.")
-		LogWrite(1, "Error: Rule removal timed out.")
+		MemoWrite("警告: 规则删除超时 " & $iTimeout & "ms.")
+		LogWrite(1, "错误: 规则删除超时.")
 	ElseIf @error Then
-		MemoWrite("Error removing firewall rules.")
-		LogWrite(1, "Error removing firewall rules.")
+		MemoWrite("无法删除防火墙规则.")
+		LogWrite(1, "无法删除防火墙规则.")
 	Else
-		MemoWrite("Firewall rules removed successfully.")
-		LogWrite(1, "Firewall rules removed successfully.")
+		MemoWrite("成功删除防火墙规则.")
+		LogWrite(1, "成功删除防火墙规则.")
 	EndIf
 
-	LogWrite(1, "Firewall rule removal process completed." & @CRLF)
+	LogWrite(1, "已完成防火墙规则删除任务." & @CRLF)
 	ToggleLog(1)
 EndFunc   ;==>RemoveFirewallRules
 
 Func CreateFirewallRules()
-	MemoWrite("Starting firewall rule creation process...")
-	LogWrite(1, "Starting firewall rule creation process.")
+	MemoWrite("开始创建防火墙规则...")
+	LogWrite(1, "开始创建防火墙规则.")
 
 	If CheckThirdPartyFirewall() Then
-		MemoWrite("Third-party firewall detected. Skipping GUI and listing found applications.")
+		MemoWrite("检测到第三方防火墙，跳过 GUI 并列出找到的软件.")
 		Local $foundApps = FindApps()
 		If UBound($foundApps) = 0 Then
-			LogWrite(1, "No applications found to block.")
+			LogWrite(1, "找不到需要阻止联网的 Adobe 软件.")
 		Else
-			LogWrite(1, "Found " & UBound($foundApps) & " applications:")
+			LogWrite(1, "已找到 " & UBound($foundApps) & " 个 Adobe 软件:")
 			For $app In $foundApps
 				LogWrite(1, "- " & $app)
 			Next
-			LogWrite(1, "Third-party firewall detected" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". Please manually add these paths to your firewall.")
+			LogWrite(1, "检测到第三方防火墙" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". 请手动将这些路径添加到您的防火墙.")
 		EndIf
-		LogWrite(1, "Firewall rule creation process completed." & @CRLF)
+		LogWrite(1, "已完成防火墙规则创建任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("Scanning for applications...")
+	MemoWrite("正在扫描 Adobe 软件...")
 	Local $foundApps = FindApps()
 	Local $SelectedApps = ShowAppSelectionGUI($foundApps)
 
 	If $SelectedApps = -1 Then
 		Return
 	ElseIf Not IsArray($SelectedApps) Then
-		MemoWrite("Firewall rule selection cancelled by user.")
-		LogWrite(1, "Firewall rule selection cancelled by user." & @CRLF)
+		MemoWrite("防火墙规则任务被用户取消.")
+		LogWrite(1, "防火墙规则任务被用户取消." & @CRLF)
 		Return
 	EndIf
 
@@ -2366,21 +2366,21 @@ Func CreateFirewallRules()
 	_GUICtrlTab_SetCurFocus($hTab, 3)
 
 	If UBound($SelectedApps) = 0 Then
-		MemoWrite("No applications selected by the user.")
-		LogWrite(1, "No applications selected.")
-		LogWrite(1, "Firewall rule creation process completed." & @CRLF)
+		MemoWrite("用户未选择任何软件.")
+		LogWrite(1, "未选择任何软件.")
+		LogWrite(1, "已完成防火墙规则创建任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("User selected " & UBound($SelectedApps) & " file(s).")
+	MemoWrite("用户选择了 " & UBound($SelectedApps) & " 个文件.")
 	Local $psCmdComposite = ""
 	Local $rulesAdded = 0
 	Local $addedApps[0]
 	For $app In $SelectedApps
 		$app = StringStripWS($app, 3)
 		If $app = "" Then
-			MemoWrite("Skipping empty or invalid selected path.")
+			MemoWrite("跳过空白或无效的路径.")
 			ContinueLoop
 		EndIf
 		If FileExists($app) Then
@@ -2388,20 +2388,20 @@ Func CreateFirewallRules()
 			If Not RuleExists($ruleName) Then
 				Local $ruleCmd = "New-NetFirewallRule -DisplayName 'Adobe-Block - " & $ruleName & "' -Direction Outbound -Program '" & $app & "' -Action Block;"
 				$psCmdComposite &= $ruleCmd
-				MemoWrite("Adding firewall rule for: " & $app)
+				MemoWrite("添加防火墙规则: " & $app)
 				_ArrayAdd($addedApps, $app)
 				$rulesAdded += 1
 			Else
-				MemoWrite("Rule already exists for: " & $app & " - Skipping.")
+				MemoWrite("已存在防火墙规则: " & $app & " - 跳过.")
 			EndIf
 		Else
-			MemoWrite("File not found: " & $app)
-			LogWrite(1, "File not found: " & $app)
+			MemoWrite("找不到文件: " & $app)
+			LogWrite(1, "找不到文件: " & $app)
 		EndIf
 	Next
 
 	If $rulesAdded > 0 Then
-		LogWrite(1, "Selected " & $rulesAdded & " files(s) for new firewall rule(s):")
+		LogWrite(1, "已选择 " & $rulesAdded & " 个文件来创建防火墙规则:")
 		For $app In $addedApps
 			LogWrite(1, "- " & $app)
 		Next
@@ -2410,36 +2410,36 @@ Func CreateFirewallRules()
 		Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 		If $iWaitResult = 0 Then
 			ProcessClose($iPID)
-			MemoWrite("Warning: Rule creation timed out after " & $iTimeout & "ms.")
-			LogWrite(1, "Error: Rule creation timed out.")
+			MemoWrite("警告: 规则创建超时 " & $iTimeout & "ms.")
+			LogWrite(1, "错误: 规则创建超时.")
 		ElseIf @error Then
-			MemoWrite("Error applying firewall rules.")
-			LogWrite(1, "Error applying firewall rules.")
+			MemoWrite("无法应用防火墙规则.")
+			LogWrite(1, "无法应用防火墙规则.")
 		Else
-			MemoWrite("Firewall rules applied successfully.")
-			LogWrite(1, "Firewall rules applied successfully.")
+			MemoWrite("成功应用防火墙规则.")
+			LogWrite(1, "成功应用防火墙规则.")
 		EndIf
 	Else
-		MemoWrite("No new firewall rules to add.")
-		LogWrite(1, "No new firewall rules were added (all selected rules already exist).")
+		MemoWrite("无需添加新的防火墙规则.")
+		LogWrite(1, "无需添加新的防火墙规则 (所有规则均已存在).")
 	EndIf
 
-	LogWrite(1, "Firewall rule creation process completed." & @CRLF)
+	LogWrite(1, "已完成防火墙规则创建任务." & @CRLF)
 	ToggleLog(1)
 EndFunc   ;==>CreateFirewallRules
 
 Func ShowAppSelectionGUI($foundFiles)
 	If Not FileExists($MyDefPath) Or Not StringInStr(FileGetAttrib($MyDefPath), "D") Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("Error: Invalid Path: " & $MyDefPath)
-		LogWrite(1, "Error: Invalid Path: " & $MyDefPath)
+		MemoWrite("错误: 路径无效: " & $MyDefPath)
+		LogWrite(1, "错误: 路径无效: " & $MyDefPath)
 		ToggleLog(1)
 		Return ""
 	EndIf
 	If UBound($foundFiles) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No file(s) found at: " & $MyDefPath)
-		LogWrite(1, "No file(s) found at: " & $MyDefPath)
+		MemoWrite("找不到文件: " & $MyDefPath)
+		LogWrite(1, "找不到文件: " & $MyDefPath)
 		ToggleLog(1)
 		Return -1
 	EndIf
@@ -2447,10 +2447,10 @@ Func ShowAppSelectionGUI($foundFiles)
 	Local $aMainPos = WinGetPos($MyhGUI)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 500) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 400) / 2
-	Local $hGUI = GUICreate("Select File(s) to Firewall", 500, 400, $iPopupX, $iPopupY)
-	Local $hSelectAll = GUICtrlCreateCheckbox("Select All", 10, 10)
+	Local $hGUI = GUICreate("选择要断网的文件", 500, 400, $iPopupX, $iPopupY)
+	Local $hSelectAll = GUICtrlCreateCheckbox("全选", 10, 10)
 	Local $hTreeView = GUICtrlCreateTreeView(10, 40, 480, 300, BitOR($TVS_CHECKBOXES, $TVS_HASBUTTONS, $TVS_HASLINES, $TVS_LINESATROOT))
-	Local $hOkButton = GUICtrlCreateButton("OK", 200, 350, 100, 30)
+	Local $hOkButton = GUICtrlCreateButton("确定", 200, 350, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	Local $defPathClean = StringStripWS($MyDefPath, 3)
@@ -2464,11 +2464,11 @@ Func ShowAppSelectionGUI($foundFiles)
 	For $file In $foundFiles
 		Local $fileNoBak = StringRegExpReplace(StringReplace($file, ".bak", ""), "\\\\+", "\\")
 		Local $fileParts = StringSplit($fileNoBak, "\", 1)
-		Local $appName = "Unknown"
+		Local $appName = "未知"
 		If $fileParts[0] >= $defPathDepth + 1 Then
 			$appName = $fileParts[$defPathDepth + 1]
 		Else
-			LogWrite(1, "Warning: Short path used in config, using Unknown for: " & $fileNoBak)
+			LogWrite(1, "警告: 配置里的匹配路径不够完整，暂时归类到未知: " & $fileNoBak)
 		EndIf
 
 		If Not $appNodes.Exists($appName) Then
@@ -2479,7 +2479,7 @@ Func ShowAppSelectionGUI($foundFiles)
 		Local $hItem = GUICtrlCreateTreeViewItem($file, $appNodes($appName))
 		_GUICtrlTreeView_SetChecked($hTreeView, $hItem, False)
 	Next
-	LogWrite(1, "Found " & UBound($foundFiles) & " file(s) across " & $appNodes.Count & " application(s).")
+	LogWrite(1, "已从 " & $appNodes.Count & " 个软件中找出 " & UBound($foundFiles) & " 个文件.")
 
 	Global $prevStates = ObjCreate("Scripting.Dictionary")
 	Global $ghTreeView = $hTreeView
@@ -2518,7 +2518,7 @@ Func ShowAppSelectionGUI($foundFiles)
 				AdlibUnRegister("CheckParentCheckboxes")
 				Local $SelectedApps[0]
 				Local $hItem = _GUICtrlTreeView_GetFirstItem($hTreeView)
-				MemoWrite("Scanning for selected items...")
+				MemoWrite("正在扫描所选项...")
 				While $hItem <> 0
 					If _GUICtrlTreeView_GetChecked($hTreeView, $hItem) Then
 						Local $itemText = _GUICtrlTreeView_GetText($hTreeView, $hItem)
@@ -2530,7 +2530,7 @@ Func ShowAppSelectionGUI($foundFiles)
 					$hItem = _GUICtrlTreeView_GetNext($hTreeView, $hItem)
 				WEnd
 				_GUICtrlTab_SetCurFocus($hTab, 3)
-				MemoWrite("Selected " & UBound($SelectedApps) & " file(s) for firewall rules.")
+				MemoWrite("已选择 " & UBound($SelectedApps) & " 个文件要添加到防火墙规则.")
 				GUIDelete($hGUI)
 				Return $SelectedApps
 			Case $GUI_EVENT_PRIMARYDOWN
@@ -2572,21 +2572,21 @@ Func CheckParentCheckboxes()
 EndFunc   ;==>CheckParentCheckboxes
 
 Func ShowToggleRulesGUI()
-	MemoWrite("Opening firewall rule toggle options...")
+	MemoWrite("正在打开防火墙规则开关窗口...")
 
 	Local $aMainPos = WinGetPos($MyhGUI)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 300) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 150) / 2
-	Local $hToggleGUI = GUICreate("Toggle Rules", 300, 150, $iPopupX, $iPopupY)
-	Local $hEnableButton = GUICtrlCreateButton("Enable All", 50, 50, 100, 30)
-	Local $hDisableButton = GUICtrlCreateButton("Disable All", 150, 50, 100, 30)
-	Local $hCancelButton = GUICtrlCreateButton("Cancel", 100, 100, 100, 30)
+	Local $hToggleGUI = GUICreate("防火墙规则开关", 300, 150, $iPopupX, $iPopupY)
+	Local $hEnableButton = GUICtrlCreateButton("全部启用", 50, 50, 100, 30)
+	Local $hDisableButton = GUICtrlCreateButton("全部禁用", 150, 50, 100, 30)
+	Local $hCancelButton = GUICtrlCreateButton("取消", 100, 100, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	While 1
 		Switch GUIGetMsg()
 			Case $GUI_EVENT_CLOSE, $hCancelButton
-				MemoWrite("Toggle rules operation cancelled.")
+				MemoWrite("防火墙规则开关操作被取消.")
 				GUIDelete($hToggleGUI)
 				Return
 			Case $hEnableButton
@@ -2604,13 +2604,13 @@ Func ShowToggleRulesGUI()
 EndFunc   ;==>ShowToggleRulesGUI
 
 Func EnableAllFWRules()
-	MemoWrite("Enabling all GenP firewall rules...")
-	LogWrite(1, "Starting process to enable all GenP firewall rules.")
+	MemoWrite("正在启用所有 GenP 防火墙规则...")
+	LogWrite(1, "开始启用所有 GenP 防火墙规则.")
 
 	If CheckThirdPartyFirewall() Then
-		MemoWrite("Third-party firewall detected. Cannot modify rules.")
-		LogWrite(1, "Third-party firewall detected" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". This option only supports Windows Firewall.")
-		LogWrite(1, "Enable rules process completed." & @CRLF)
+		MemoWrite("检测到第三方防火墙，无法修改规则.")
+		LogWrite(1, "检测到第三方防火墙" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". 此功能仅支持 Windows 防火墙.")
+		LogWrite(1, "已完成防火墙规则启用任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
@@ -2622,7 +2622,7 @@ Func EnableAllFWRules()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Rule scan timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 规则扫描超时 " & $iTimeout & "ms.")
 	EndIf
 	$sOutput = StdoutRead($iPID)
 
@@ -2633,15 +2633,15 @@ Func EnableAllFWRules()
 	Next
 
 	If $iRuleCount = 0 Then
-		MemoWrite("No GenP firewall rules found to enable.")
-		LogWrite(1, "No GenP firewall rules found.")
-		LogWrite(1, "Enable rules process completed." & @CRLF)
+		MemoWrite("找不到可启用的 GenP 防火墙规则.")
+		LogWrite(1, "找不到 GenP 防火墙规则.")
+		LogWrite(1, "已完成防火墙规则启用任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("Enabling " & $iRuleCount & " Adobe-Block rule(s)...")
-	LogWrite(1, "Enabling " & $iRuleCount & " rule(s):")
+	MemoWrite("正在启用 " & $iRuleCount & " 条 Adobe-Block 规则...")
+	LogWrite(1, "正在启用 " & $iRuleCount & " 条规则:")
 	For $i = 1 To $aRules[0]
 		If StringInStr($aRules[$i], "Adobe-Block") Then
 			LogWrite(1, "- " & StringStripWS($aRules[$i], 3))
@@ -2653,28 +2653,28 @@ Func EnableAllFWRules()
 	$iWaitResult = ProcessWaitClose($iPIDEnable, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPIDEnable)
-		MemoWrite("Warning: Rule enabling timed out after " & $iTimeout & "ms.")
-		LogWrite(1, "Error: Rule enabling timed out.")
+		MemoWrite("警告: 规则启用超时 " & $iTimeout & "ms.")
+		LogWrite(1, "错误: 规则启用超时.")
 	ElseIf @error Then
-		MemoWrite("Error enabling firewall rules.")
-		LogWrite(1, "Error enabling firewall rules.")
+		MemoWrite("无法启用防火墙规则.")
+		LogWrite(1, "无法启用防火墙规则.")
 	Else
-		MemoWrite("All GenP firewall rules enabled successfully.")
-		LogWrite(1, "All GenP firewall rules enabled successfully.")
+		MemoWrite("成功启用所有 GenP 防火墙规则.")
+		LogWrite(1, "成功启用所有 GenP 防火墙规则.")
 	EndIf
 
-	LogWrite(1, "Enable rules process completed." & @CRLF)
+	LogWrite(1, "已完成防火墙规则启用任务." & @CRLF)
 	ToggleLog(1)
 EndFunc   ;==>EnableAllFWRules
 
 Func DisableAllFWRules()
-	MemoWrite("Disabling all GenP firewall rules...")
-	LogWrite(1, "Starting process to disable all GenP firewall rules.")
+	MemoWrite("正在禁用所有 GenP 防火墙规则...")
+	LogWrite(1, "开始禁用所有 GenP 防火墙规则.")
 
 	If CheckThirdPartyFirewall() Then
-		MemoWrite("Third-party firewall detected. Cannot modify rules.")
-		LogWrite(1, "Third-party firewall detected" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". This option only supports Windows Firewall.")
-		LogWrite(1, "Disable rules process completed." & @CRLF)
+		MemoWrite("检测到第三方防火墙，无法修改规则.")
+		LogWrite(1, "检测到第三方防火墙" & ($g_sThirdPartyFirewall <> "" ? " (" & $g_sThirdPartyFirewall & ")" : "") & ". 此功能仅支持 Windows 防火墙.")
+		LogWrite(1, "已完成防火墙规则禁用任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
@@ -2686,7 +2686,7 @@ Func DisableAllFWRules()
 	Local $iWaitResult = ProcessWaitClose($iPID, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPID)
-		MemoWrite("Warning: Rule scan timed out after " & $iTimeout & "ms.")
+		MemoWrite("警告: 规则扫描超时 " & $iTimeout & "ms.")
 	EndIf
 	$sOutput = StdoutRead($iPID)
 
@@ -2697,15 +2697,15 @@ Func DisableAllFWRules()
 	Next
 
 	If $iRuleCount = 0 Then
-		MemoWrite("No GenP firewall rules found to disable.")
-		LogWrite(1, "No GenP firewall rules found.")
-		LogWrite(1, "Disable rules process completed." & @CRLF)
+		MemoWrite("找不到可禁用的 GenP 防火墙规则.")
+		LogWrite(1, "找不到 GenP 防火墙规则.")
+		LogWrite(1, "已完成防火墙规则禁用任务." & @CRLF)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	MemoWrite("Disabling " & $iRuleCount & " Adobe-Block rule(s)...")
-	LogWrite(1, "Disabling " & $iRuleCount & " rule(s):")
+	MemoWrite("正在禁用 " & $iRuleCount & " 条 Adobe-Block 规则...")
+	LogWrite(1, "正在禁用 " & $iRuleCount & " 条规则:")
 	For $i = 1 To $aRules[0]
 		If StringInStr($aRules[$i], "Adobe-Block") Then
 			LogWrite(1, "- " & StringStripWS($aRules[$i], 3))
@@ -2717,17 +2717,17 @@ Func DisableAllFWRules()
 	$iWaitResult = ProcessWaitClose($iPIDDisable, $iTimeout)
 	If $iWaitResult = 0 Then
 		ProcessClose($iPIDDisable)
-		MemoWrite("Warning: Rule disabling timed out after " & $iTimeout & "ms.")
-		LogWrite(1, "Error: Rule disabling timed out.")
+		MemoWrite("警告: 规则禁用超时 " & $iTimeout & "ms.")
+		LogWrite(1, "错误: 规则禁用超时.")
 	ElseIf @error Then
-		MemoWrite("Error disabling firewall rules.")
-		LogWrite(1, "Error disabling firewall rules.")
+		MemoWrite("无法禁用防火墙规则.")
+		LogWrite(1, "无法禁用防火墙规则.")
 	Else
-		MemoWrite("All GenP firewall rules disabled successfully.")
-		LogWrite(1, "All GenP firewall rules disabled successfully.")
+		MemoWrite("成功禁用所有 GenP 防火墙规则.")
+		LogWrite(1, "成功禁用所有 GenP 防火墙规则.")
 	EndIf
 
-	LogWrite(1, "Disable rules process completed." & @CRLF)
+	LogWrite(1, "已完成防火墙规则禁用任务." & @CRLF)
 	ToggleLog(1)
 EndFunc   ;==>DisableAllFWRules
 
@@ -2736,8 +2736,8 @@ EndFunc   ;==>DisableAllFWRules
 Func FindRuntimeInstallerFiles()
 	If Not FileExists($MyDefPath) Or Not StringInStr(FileGetAttrib($MyDefPath), "D") Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("Error: Invalid Path: " & $MyDefPath)
-		LogWrite(1, "Error: Invalid Path: " & $MyDefPath)
+		MemoWrite("错误: 路径无效: " & $MyDefPath)
+		LogWrite(1, "错误: 路径无效: " & $MyDefPath)
 		Local $empty[0]
 		ToggleLog(1)
 		Return $empty
@@ -2748,8 +2748,8 @@ Func FindRuntimeInstallerFiles()
 
 	If @error Or $tRuntimePaths[0][0] = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("Warning: [RuntimeInstallers] section not found or empty in config.ini")
-		LogWrite(1, "Warning: [RuntimeInstallers] section not found or empty in config.ini")
+		MemoWrite("警告: 在 config.ini 配置文件中找不到 [RuntimeInstallers] 一节")
+		LogWrite(1, "警告: 在 config.ini 配置文件中找不到 [RuntimeInstallers] 一节")
 		Local $empty[0]
 		ToggleLog(1)
 		Return $empty
@@ -2807,13 +2807,13 @@ Func FindRuntimeInstallerFiles()
 EndFunc   ;==>FindRuntimeInstallerFiles
 
 Func UnpackRuntimeInstallers()
-	MemoWrite("Scanning for RuntimeInstaller.dll files...")
+	MemoWrite("正在扫描 RuntimeInstaller.dll 文件...")
 	Local $foundFiles = FindRuntimeInstallerFiles()
 
 	If UBound($foundFiles) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No file(s) found at: " & $MyDefPath)
-		LogWrite(1, "No file(s) found at: " & $MyDefPath)
+		MemoWrite("找不到文件: " & $MyDefPath)
+		LogWrite(1, "找不到文件: " & $MyDefPath)
 		ToggleLog(1)
 		Return
 	EndIf
@@ -2822,8 +2822,8 @@ Func UnpackRuntimeInstallers()
 
 	If Not IsArray($selectedFiles) Or UBound($selectedFiles) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No RuntimeInstaller.dll files selected to unpack.")
-		LogWrite(1, "No files selected to unpack.")
+		MemoWrite("未选择要解包的 RuntimeInstaller.dll 文件.")
+		LogWrite(1, "未选择要解包的文件.")
 		ToggleLog(1)
 		Return
 	EndIf
@@ -2833,75 +2833,75 @@ Func UnpackRuntimeInstallers()
 		FileInstall("upx.exe", $upxPath, 1)
 		If Not FileExists($upxPath) Then
 			_GUICtrlTab_SetCurFocus($hTab, 3)
-			MemoWrite("Error: Failed to extract upx.exe to " & $upxPath)
-			LogWrite(1, "Error: Failed to extract upx.exe.")
+			MemoWrite("错误: 无法将 upx.exe 解压到 " & $upxPath)
+			LogWrite(1, "错误: 无法解压 upx.exe.")
 			ToggleLog(1)
 			Return
 		EndIf
 	EndIf
 
-	MemoWrite("Unpacking " & UBound($selectedFiles) & " file(s)...")
-	LogWrite(1, "Unpacking " & UBound($selectedFiles) & " file(s):")
+	MemoWrite("正在解包 " & UBound($selectedFiles) & " 个文件...")
+	LogWrite(1, "正在解包 " & UBound($selectedFiles) & " 个文件:")
 	Local $successCount = 0
 
 	For $file In $selectedFiles
 		$file = StringStripWS($file, 3)
 		If $file = "" Or Not FileExists($file) Then
-			MemoWrite("Skipping invalid or missing file: " & $file)
-			LogWrite(1, "Skipping invalid or missing file: " & $file)
+			MemoWrite("跳过无效或缺失的文件: " & $file)
+			LogWrite(1, "跳过无效或缺失的文件: " & $file)
 			ContinueLoop
 		EndIf
 
-		LogWrite(1, "Processing: " & $file)
+		LogWrite(1, "处理: " & $file)
 
 		If Not IsUPXPacked($file) Then
-			MemoWrite("Skipped: " & $file & " is not a UPX-packed file.")
-			LogWrite(1, "Skipped: " & $file & " is not a UPX-packed file.")
+			MemoWrite("跳过: " & $file & " 未经 UPX 打包.")
+			LogWrite(1, "跳过: " & $file & " 未经 UPX 打包.")
 			ContinueLoop
 		EndIf
 
 		If Not PatchUPXHeader($file) Then
-			MemoWrite("Failed to patch UPX headers for: " & $file)
-			LogWrite(1, "Failed to patch UPX headers for: " & $file)
+			MemoWrite("无法修正 UPX 段名: " & $file)
+			LogWrite(1, "无法修正 UPX 段名: " & $file)
 			ContinueLoop
 		EndIf
 
 		Local $iResult = RunWait('"' & $upxPath & '" -d "' & $file & '"', "", @SW_HIDE)
 		If $iResult = 0 Then
-			MemoWrite("Successfully unpacked: " & $file)
-			LogWrite(1, "Successfully unpacked: " & $file)
+			MemoWrite("解包成功: " & $file)
+			LogWrite(1, "解包成功: " & $file)
 			$successCount += 1
 			Local $sBackupPath = $file & ".bak"
 			If FileExists($sBackupPath) Then
 				FileDelete($sBackupPath)
 			EndIf
 		Else
-			MemoWrite("Failed to unpack: " & $file & " (UPX error code: " & $iResult & ")")
-			LogWrite(1, "Failed to unpack: " & $file & " (UPX error code: " & $iResult & ")")
+			MemoWrite("解包失败: " & $file & " (UPX 错误码: " & $iResult & ")")
+			LogWrite(1, "解包失败: " & $file & " (UPX 错误码: " & $iResult & ")")
 			Local $sBackupPath = $file & ".bak"
 			If FileExists($sBackupPath) Then
 				FileCopy($sBackupPath, $file, 1)
 				FileDelete($sBackupPath)
-				MemoWrite("Restored original file from backup: " & $file)
-				LogWrite(1, "Restored original file from backup: " & $file)
+				MemoWrite("已从备份中还原原始文件: " & $file)
+				LogWrite(1, "已从备份中还原原始文件: " & $file)
 			EndIf
 		EndIf
 	Next
 
 	If FileExists($upxPath) Then
 		If FileDelete($upxPath) Then
-			MemoWrite("Deleted upx.exe from " & $upxPath & ".")
+			MemoWrite("已从 " & $upxPath & " 中移除 upx.exe.")
 		Else
-			MemoWrite("Warning: Failed to delete upx.exe from " & $upxPath & ".")
-			LogWrite(1, "Warning: Failed to delete upx.exe from " & $upxPath & ".")
+			MemoWrite("警告: 无法从 " & $upxPath & " 中移除 upx.exe.")
+			LogWrite(1, "警告: 无法从 " & $upxPath & " 中移除 upx.exe.")
 		EndIf
 	EndIf
 
-	MemoWrite("Unpack completed. Successfully unpacked " & $successCount & " file(s).")
-	LogWrite(1, "Unpack process completed.")
+	MemoWrite("解包结束，已成功处理 " & $successCount & " 个文件.")
+	LogWrite(1, "已完成解包任务.")
 
 	If $successCount > 0 Then
-		LogWrite(1, $successCount & " file(s) successfully unpacked and can now be patched.")
+		LogWrite(1, $successCount & " 个文件已解包并可修补.")
 	EndIf
 
 	ToggleLog(1)
@@ -2910,14 +2910,14 @@ EndFunc   ;==>UnpackRuntimeInstallers
 Func IsUPXPacked($sFilePath)
 	Local $hFile = FileOpen($sFilePath, 16)
 	If $hFile = -1 Then
-		LogWrite(1, "Error: Failed to open file for UPX check: " & $sFilePath)
+		LogWrite(1, "错误: 无法打开文件以进行 UPX 检查: " & $sFilePath)
 		Return False
 	EndIf
 
 	Local $bData = FileRead($hFile)
 	FileClose($hFile)
 	If @error Then
-		LogWrite(1, "Error: Failed to read file for UPX check: " & $sFilePath)
+		LogWrite(1, "错误: 无法读取文件以进行 UPX 检查: " & $sFilePath)
 		Return False
 	EndIf
 
@@ -2938,22 +2938,22 @@ Func PatchUPXHeader($sFilePath)
 
 	Local $sBackupPath = $sFilePath & ".bak"
 	If Not FileCopy($sFilePath, $sBackupPath, 1) Then
-		MemoWrite("Error: Failed to create backup for: " & $sFilePath)
-		LogWrite(1, "Error: Failed to create backup for: " & $sFilePath)
+		MemoWrite("错误: 无法创建备份: " & $sFilePath)
+		LogWrite(1, "错误: 无法创建备份: " & $sFilePath)
 		Return False
 	EndIf
 
 	Local $hFile = FileOpen($sFilePath, 16)
 	If $hFile = -1 Then
-		MemoWrite("Error: Failed to open file for patching: " & $sFilePath)
-		LogWrite(1, "Error: Failed to open file for patching: " & $sFilePath)
+		MemoWrite("错误: 无法打开文件以修补: " & $sFilePath)
+		LogWrite(1, "错误: 无法打开文件以修补: " & $sFilePath)
 		Return False
 	EndIf
 	Local $bData = FileRead($hFile)
 	FileClose($hFile)
 	If @error Then
-		MemoWrite("Error: Failed to read file for patching: " & $sFilePath)
-		LogWrite(1, "Error: Failed to read file for patching: " & $sFilePath)
+		MemoWrite("错误: 无法读取文件以修补: " & $sFilePath)
+		LogWrite(1, "错误: 无法读取文件以修补: " & $sFilePath)
 		Return False
 	EndIf
 
@@ -2977,7 +2977,7 @@ Func PatchUPXHeader($sFilePath)
 	Next
 
 	If Not $bModified Then
-		MemoWrite("No custom UPX headers found in: " & $sFilePath)
+		MemoWrite("未找到自定义 UPX 段名: " & $sFilePath)
 		FileDelete($sBackupPath)
 		Return True
 	EndIf
@@ -2985,8 +2985,8 @@ Func PatchUPXHeader($sFilePath)
 	Local $bModifiedData = Binary("0x" & StringMid($sHexData, 3))
 	Local $hFileWrite = FileOpen($sFilePath, 18)
 	If $hFileWrite = -1 Then
-		MemoWrite("Error: Failed to open file for writing: " & $sFilePath)
-		LogWrite(1, "Error: Failed to open file for writing: " & $sFilePath)
+		MemoWrite("错误: 无法打开文件以写入: " & $sFilePath)
+		LogWrite(1, "错误: 无法打开文件以写入: " & $sFilePath)
 		FileCopy($sBackupPath, $sFilePath, 1)
 		FileDelete($sBackupPath)
 		Return False
@@ -2994,29 +2994,29 @@ Func PatchUPXHeader($sFilePath)
 	FileWrite($hFileWrite, $bModifiedData)
 	FileClose($hFileWrite)
 	If @error Then
-		MemoWrite("Error: Failed to write patched data to: " & $sFilePath)
-		LogWrite(1, "Error: Failed to write patched data to: " & $sFilePath)
+		MemoWrite("错误: 无法写入修补完成的数据: " & $sFilePath)
+		LogWrite(1, "错误: 无法写入修补完成的数据: " & $sFilePath)
 		FileCopy($sBackupPath, $sFilePath, 1)
 		FileDelete($sBackupPath)
 		Return False
 	EndIf
 
-	MemoWrite("Successfully patched UPX headers in: " & $sFilePath)
+	MemoWrite("成功修正 UPX 段名: " & $sFilePath)
 	Return True
 EndFunc   ;==>PatchUPXHeader
 
 Func RuntimeDllSelectionGUI($foundFiles, $operation)
 	If Not FileExists($MyDefPath) Or Not StringInStr(FileGetAttrib($MyDefPath), "D") Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("Error: Invalid Path: " & $MyDefPath)
-		LogWrite(1, "Error: Invalid Path: " & $MyDefPath)
+		MemoWrite("错误: 路径无效: " & $MyDefPath)
+		LogWrite(1, "错误: 路径无效: " & $MyDefPath)
 		ToggleLog(1)
 		Return ""
 	EndIf
 	If UBound($foundFiles) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No RuntimeInstaller.dll files found to unpack.")
-		LogWrite(1, "No RuntimeInstaller.dll files found to unpack.")
+		MemoWrite("找不到需要解包的 RuntimeInstaller.dll 文件.")
+		LogWrite(1, "找不到需要解包的 RuntimeInstaller.dll 文件.")
 		ToggleLog(1)
 		Return ""
 	EndIf
@@ -3024,10 +3024,10 @@ Func RuntimeDllSelectionGUI($foundFiles, $operation)
 	Local $aMainPos = WinGetPos($MyhGUI)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 500) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 400) / 2
-	Local $hGUI = GUICreate("Unpack RuntimeInstaller", 500, 400, $iPopupX, $iPopupY)
-	Local $hSelectAll = GUICtrlCreateCheckbox("Select All", 10, 10)
+	Local $hGUI = GUICreate("RuntimeInstaller 解包", 500, 400, $iPopupX, $iPopupY)
+	Local $hSelectAll = GUICtrlCreateCheckbox("全选", 10, 10)
 	Local $hTreeView = GUICtrlCreateTreeView(10, 40, 480, 300, BitOR($TVS_CHECKBOXES, $TVS_HASBUTTONS, $TVS_HASLINES, $TVS_LINESATROOT))
-	Local $hOkButton = GUICtrlCreateButton("OK", 200, 350, 100, 30)
+	Local $hOkButton = GUICtrlCreateButton("确定", 200, 350, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	Local $defPathClean = StringStripWS($MyDefPath, 3)
@@ -3041,11 +3041,11 @@ Func RuntimeDllSelectionGUI($foundFiles, $operation)
 	For $file In $foundFiles
 		Local $fileClean = StringRegExpReplace($file, "\\\\+", "\\")
 		Local $fileParts = StringSplit($fileClean, "\", 1)
-		Local $appName = "Unknown"
+		Local $appName = "未知"
 		If $fileParts[0] >= $defPathDepth + 1 Then
 			$appName = $fileParts[$defPathDepth + 1]
 		Else
-			LogWrite(1, "Warning: Short path used in config, using Unknown for: " & $fileClean)
+			LogWrite(1, "警告: 配置里的匹配路径不够完整，暂时归类到未知: " & $fileClean)
 		EndIf
 		If Not $appNodes.Exists($appName) Then
 			Local $hAppNode = GUICtrlCreateTreeViewItem($appName, $hTreeView)
@@ -3075,8 +3075,8 @@ Func RuntimeDllSelectionGUI($foundFiles, $operation)
 			Case $GUI_EVENT_CLOSE
 				AdlibUnRegister("CheckParentCheckboxes")
 				GUIDelete($hGUI)
-				MemoWrite("RuntimeInstaller unpacking cancelled.")
-				LogWrite(1, "RuntimeInstaller unpacking cancelled.")
+				MemoWrite("RuntimeInstaller 解包已取消.")
+				LogWrite(1, "RuntimeInstaller 解包已取消.")
 				Return ""
 			Case $hSelectAll
 				AdlibUnRegister("CheckParentCheckboxes")
@@ -3106,8 +3106,8 @@ Func RuntimeDllSelectionGUI($foundFiles, $operation)
 				GUIDelete($hGUI)
 				If UBound($selectedFiles) = 0 Then
 					_GUICtrlTab_SetCurFocus($hTab, 3)
-					MemoWrite("No RuntimeInstaller.dll files selected to unpack.")
-					LogWrite(1, "No RuntimeInstaller.dll files selected to unpack.")
+					MemoWrite("未选择要解包的 RuntimeInstaller.dll 文件.")
+					LogWrite(1, "未选择要解包的 RuntimeInstaller.dll 文件.")
 					ToggleLog(1)
 					Return ""
 				EndIf
@@ -3138,26 +3138,26 @@ Func AddDevOverride()
 	Local $iExpectedValue = 1
 
 	If Not IsAdmin() Then
-		MemoWrite("Error: Administrator rights required to set registry key.")
-		LogWrite(1, "Error: Administrator rights required for registry access.")
+		MemoWrite("错误: 需要管理员权限才能设置注册表项.")
+		LogWrite(1, "错误: 需要管理员权限才能访问注册表.")
 		Return False
 	EndIf
 
 	Local $iCurrentValue = RegRead($sKey, $sValueName)
 	If @error = 0 And $iCurrentValue = $iExpectedValue Then
-		MemoWrite("Registry key " & $sValueName & " already enabled.")
-		LogWrite(1, "Registry key " & $sValueName & " already set to " & $iExpectedValue & ".")
+		MemoWrite("注册表项 " & $sValueName & " 已经是启用的了.")
+		LogWrite(1, "注册表项 " & $sValueName & " 已经是设为 " & $iExpectedValue & " 的了.")
 		Return True
 	EndIf
 
 	If RegWrite($sKey, $sValueName, "REG_DWORD", $iExpectedValue) Then
-		MemoWrite("Enabled registry key " & $sValueName & " for WinTrust override.")
-		LogWrite(1, "Set registry key " & $sValueName & " = " & $iExpectedValue & ".")
+		MemoWrite("已启用注册表项 " & $sValueName & " 以便进行 WinTrust 重定向.")
+		LogWrite(1, "已设置注册表项 " & $sValueName & " = " & $iExpectedValue & ".")
 		ShowRebootPopup()
 		Return True
 	Else
-		MemoWrite("Error: Failed to enable registry key " & $sValueName & ".")
-		LogWrite(1, "Error: Failed to set registry key " & $sValueName & " (Error: " & @error & ").")
+		MemoWrite("错误: 无法启用注册表项 " & $sValueName & ".")
+		LogWrite(1, "错误: 无法设置注册表项 " & $sValueName & " (报错: " & @error & ").")
 		Return False
 	EndIf
 EndFunc   ;==>AddDevOverride
@@ -3168,32 +3168,32 @@ Func RemoveDevOverride()
 	Local $iExpectedValue = 1
 
 	If Not IsAdmin() Then
-		MemoWrite("Error: Administrator rights required to remove registry key.")
-		LogWrite(1, "Error: Administrator rights required for registry access.")
+		MemoWrite("错误: 需要管理员权限才能删除注册表项.")
+		LogWrite(1, "错误: 需要管理员权限才能访问注册表.")
 		Return False
 	EndIf
 
 	Local $iCurrentValue = RegRead($sKey, $sValueName)
 	If @error <> 0 Then
-		MemoWrite("No registry key " & $sValueName & " found to remove.")
-		LogWrite(1, "No registry key " & $sValueName & " found.")
+		MemoWrite("不存在注册表项 " & $sValueName & " 可删.")
+		LogWrite(1, "未找到注册表项 " & $sValueName & ".")
 		Return True
 	EndIf
 
 	If $iCurrentValue <> $iExpectedValue Then
-		MemoWrite("Registry key " & $sValueName & " not enabled; no action taken.")
-		LogWrite(1, "Registry key " & $sValueName & " not set to " & $iExpectedValue & ".")
+		MemoWrite("未启用注册表项 " & $sValueName & "，无需操作.")
+		LogWrite(1, "注册表项 " & $sValueName & " 尚未设置为" & $iExpectedValue & ".")
 		Return True
 	EndIf
 
 	If RegDelete($sKey, $sValueName) Then
-		MemoWrite("Disabled registry key " & $sValueName & ".")
-		LogWrite(1, "Removed registry key " & $sValueName & ".")
+		MemoWrite("已禁用注册表项 " & $sValueName & ".")
+		LogWrite(1, "已删除注册表项 " & $sValueName & ".")
 		ShowRebootPopup()
 		Return True
 	Else
-		MemoWrite("Error: Failed to disable registry key " & $sValueName & ".")
-		LogWrite(1, "Error: Failed to remove registry key " & $sValueName & " (Error: " & @error & ").")
+		MemoWrite("错误: 无法禁用注册表项 " & $sValueName & ".")
+		LogWrite(1, "错误: 无法删除注册表项 " & $sValueName & " (报错: " & @error & ").")
 		Return False
 	EndIf
 EndFunc   ;==>RemoveDevOverride
@@ -3203,8 +3203,8 @@ Func ShowRebootPopup()
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 200) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 100) / 2
 	Local $hPopup = GUICreate("", 200, 100, $iPopupX, $iPopupY, BitOR($WS_POPUP, $WS_BORDER), $WS_EX_TOPMOST)
-	GUICtrlCreateLabel("System reboot required for changes to take effect.", 10, 10, 180, 40, $SS_CENTER)
-	Local $idOk = GUICtrlCreateButton("OK", 50, 60, 100, 30)
+	GUICtrlCreateLabel("重启电脑后生效.", 10, 10, 180, 40, $SS_CENTER)
+	Local $idOk = GUICtrlCreateButton("确定", 50, 60, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	While 1
@@ -3217,16 +3217,16 @@ Func ManageWinTrust()
 	Local $aMainPos = WinGetPos($MyhGUI)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 300) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 150) / 2
-	Local $hGUI = GUICreate("Manage WinTrust", 300, 150, $iPopupX, $iPopupY)
-	Local $hTrustButton = GUICtrlCreateButton("Trust", 50, 50, 100, 30)
-	Local $hUntrustButton = GUICtrlCreateButton("Untrust", 150, 50, 100, 30)
-	Local $hCancelButton = GUICtrlCreateButton("Cancel", 100, 100, 100, 30)
+	Local $hGUI = GUICreate("配置 WinTrust", 300, 150, $iPopupX, $iPopupY)
+	Local $hTrustButton = GUICtrlCreateButton("修改", 50, 50, 100, 30)
+	Local $hUntrustButton = GUICtrlCreateButton("还原", 150, 50, 100, 30)
+	Local $hCancelButton = GUICtrlCreateButton("取消", 100, 100, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	While 1
 		Switch GUIGetMsg()
 			Case $GUI_EVENT_CLOSE, $hCancelButton
-				MemoWrite("WinTrust management cancelled.")
+				MemoWrite("WinTrust 配置已取消.")
 				GUIDelete($hGUI)
 				Return
 			Case $hTrustButton
@@ -3259,27 +3259,27 @@ Func FindTrustEXEs()
 EndFunc   ;==>FindTrustEXEs
 
 Func TrustEXEs()
-	MemoWrite("Scanning for applications to trust...")
+	MemoWrite("正在扫描可进行 WinTrust 修改的软件...")
 	Local $foundApps = FindApps(True)
 
 	If UBound($foundApps) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No applications found to trust at: " & $MyDefPath)
-		LogWrite(1, "No applications found to trust at: " & $MyDefPath)
+		MemoWrite("找不到需要修改的软件: " & $MyDefPath)
+		LogWrite(1, "找不到需要修改的软件: " & $MyDefPath)
 		ToggleLog(1)
 		Return
 	EndIf
 
-	Local $SelectedApps = TrustSelectionGUI($foundApps, "Trust")
+	Local $SelectedApps = TrustSelectionGUI($foundApps, "修改")
 
 	If Not IsArray($SelectedApps) Or UBound($SelectedApps) = 0 Then
-		MemoWrite("No applications selected to trust.")
-		LogWrite(1, "No applications selected to trust.")
+		MemoWrite("未选择要修改的软件.")
+		LogWrite(1, "未选择要修改的软件.")
 		Return
 	EndIf
 
 	If Not AddDevOverride() Then
-		MemoWrite("WinTrust operation aborted due to registry error.")
+		MemoWrite("由于注册表错误，WinTrust 操作已终止.")
 		Return
 	EndIf
 
@@ -3287,28 +3287,28 @@ Func TrustEXEs()
 	If Not FileExists($dllSourcePath) Or FileGetSize($dllSourcePath) <> 382712 Then
 		FileInstall("wintrust.dll", $dllSourcePath, 1)
 		If Not FileExists($dllSourcePath) Then
-			MemoWrite("Error: Failed to extract wintrust.dll to " & $dllSourcePath)
-			LogWrite(1, "Error: Failed to extract wintrust.dll.")
+			MemoWrite("错误: 无法将 wintrust.dll 解压到 " & $dllSourcePath)
+			LogWrite(1, "错误: 无法解压 wintrust.dll.")
 			Return
 		EndIf
 	EndIf
 
 	If FileGetSize($dllSourcePath) <> 382712 Then
-		MemoWrite("Error: wintrust.dll size mismatch (expected 382,712 bytes).")
-		LogWrite(1, "Error: wintrust.dll size mismatch (expected 382,712 bytes).")
+		MemoWrite("错误: wintrust.dll 大小不匹配 (应为 382,712B).")
+		LogWrite(1, "错误: wintrust.dll 大小不匹配 (应为 382,712B).")
 		FileDelete($dllSourcePath)
 		Return
 	EndIf
 
-	MemoWrite("Trusting " & UBound($SelectedApps) & " application(s)...")
-	LogWrite(1, "Trusting " & UBound($SelectedApps) & " application(s):")
+	MemoWrite("正在修改 " & UBound($SelectedApps) & " 个软件...")
+	LogWrite(1, "正在修改 " & UBound($SelectedApps) & " 个软件:")
 
 	Local $successCount = 0
 	For $app In $SelectedApps
 		$app = StringStripWS($app, 3)
 		If $app = "" Or Not FileExists($app) Then
-			MemoWrite("Skipping invalid or missing file: " & $app)
-			LogWrite(1, "Skipping invalid or missing file: " & $app)
+			MemoWrite("跳过无效或缺失的文件: " & $app)
+			LogWrite(1, "跳过无效或缺失的文件: " & $app)
 			ContinueLoop
 		EndIf
 
@@ -3317,83 +3317,83 @@ Func TrustEXEs()
 		Local $localDir = $appDir & "\" & $appName & ".local"
 		Local $dllPath = $localDir & "\wintrust.dll"
 
-		LogWrite(1, "- Processing: " & $app)
+		LogWrite(1, "- 处理: " & $app)
 
 		If Not DirCreate($localDir) Then
-			MemoWrite("Failed to create directory: " & $localDir)
-			LogWrite(1, "Failed to create directory: " & $localDir)
+			MemoWrite("无法创建目录: " & $localDir)
+			LogWrite(1, "无法创建目录: " & $localDir)
 			ContinueLoop
 		EndIf
 
 		If FileExists($dllPath) Then
 			If FileGetSize($dllPath) = 382712 Then
-				MemoWrite("wintrust.dll already exists at: " & $dllPath & " - Skipping.")
-				LogWrite(1, "wintrust.dll already exists at: " & $dllPath & " - Skipping.")
+				MemoWrite("wintrust.dll 已存在于: " & $dllPath & " - 跳过.")
+				LogWrite(1, "wintrust.dll 已存在于: " & $dllPath & " - 跳过.")
 				$successCount += 1
 			Else
 				FileDelete($dllPath)
 				If FileCopy($dllSourcePath, $dllPath, 1) And FileGetSize($dllPath) > 0 Then
-					MemoWrite("Replaced wintrust.dll at: " & $dllPath)
-					LogWrite(1, "Replaced wintrust.dll at: " & $dllPath)
+					MemoWrite("wintrust.dll 已替换到: " & $dllPath)
+					LogWrite(1, "wintrust.dll 已替换到: " & $dllPath)
 					$successCount += 1
 				Else
-					MemoWrite("Failed to replace wintrust.dll to: " & $dllPath)
-					LogWrite(1, "Failed to replace wintrust.dll to: " & $dllPath)
+					MemoWrite("无法将 wintrust.dll 替换到: " & $dllPath)
+					LogWrite(1, "无法将 wintrust.dll 替换到: " & $dllPath)
 				EndIf
 			EndIf
 			ContinueLoop
 		EndIf
 
 		If FileCopy($dllSourcePath, $dllPath, 1) And FileGetSize($dllPath) > 0 Then
-			MemoWrite("Successfully trusted: " & $appName)
-			LogWrite(1, "Successfully trusted: " & $appName)
+			MemoWrite("修改成功: " & $appName)
+			LogWrite(1, "修改成功: " & $appName)
 			$successCount += 1
 		Else
-			MemoWrite("Failed to trust: " & $appName)
-			LogWrite(1, "Failed to trust: " & $appName)
+			MemoWrite("修改失败: " & $appName)
+			LogWrite(1, "修改失败: " & $appName)
 		EndIf
 	Next
 
 	If FileExists($dllSourcePath) Then
 		If FileDelete($dllSourcePath) Then
-			MemoWrite("Deleted wintrust.dll from " & $dllSourcePath & ".")
+			MemoWrite("已从 " & $dllSourcePath & " 删除 wintrust.dll.")
 		Else
-			MemoWrite("Warning: Failed to delete wintrust.dll from " & $dllSourcePath & ".")
+			MemoWrite("警告: 无法从 " & $dllSourcePath & " 删除 wintrust.dll.")
 		EndIf
 	EndIf
 
-	MemoWrite("Trust completed. Successfully processed " & $successCount & " of " & UBound($SelectedApps) & " applications.")
-	LogWrite(1, "Trust completed. Successfully processed " & $successCount & " of " & UBound($SelectedApps) & " applications.")
+	MemoWrite("修改已完成，已处理 " & $successCount & " / " & UBound($SelectedApps) & " 个软件.")
+	LogWrite(1, "修改已完成，已处理 " & $successCount & " / " & UBound($SelectedApps) & " 个软件.")
 	ToggleLog(1)
 EndFunc   ;==>TrustEXEs
 
 Func UntrustEXEs()
-	MemoWrite("Scanning for trusted applications...")
+	MemoWrite("正在扫描已经过 WinTrust 修改的软件...")
 	Local $foundEXEs = FindTrustEXEs()
 
 	If UBound($foundEXEs) = 0 Then
-		MemoWrite("No trusted applications found to untrust.")
-		LogWrite(1, "No trusted applications found to untrust.")
+		MemoWrite("找不到需要还原的软件.")
+		LogWrite(1, "找不到需要还原的软件.")
 		Return
 	EndIf
 
-	Local $SelectedApps = TrustSelectionGUI($foundEXEs, "Untrust")
+	Local $SelectedApps = TrustSelectionGUI($foundEXEs, "还原")
 
 	If Not IsArray($SelectedApps) Or UBound($SelectedApps) = 0 Then
-		MemoWrite("No applications selected to untrust.")
-		LogWrite(1, "No applications selected to untrust.")
+		MemoWrite("未选择要还原的软件.")
+		LogWrite(1, "未选择要还原的软件.")
 		Return
 	EndIf
 
-	MemoWrite("Untrusting " & UBound($SelectedApps) & " application(s)...")
-	LogWrite(1, "Untrusting " & UBound($SelectedApps) & " application(s):")
+	MemoWrite("正在还原 " & UBound($SelectedApps) & " 个软件...")
+	LogWrite(1, "正在还原 " & UBound($SelectedApps) & " 个软件:")
 
 	Local $successCount = 0
 	For $app In $SelectedApps
 		$app = StringStripWS($app, 3)
 		If $app = "" Or Not FileExists($app) Then
-			MemoWrite("Skipping invalid or missing file: " & $app)
-			LogWrite(1, "Skipping invalid or missing file: " & $app)
+			MemoWrite("跳过无效或缺失的文件: " & $app)
+			LogWrite(1, "跳过无效或缺失的文件: " & $app)
 			ContinueLoop
 		EndIf
 
@@ -3402,39 +3402,39 @@ Func UntrustEXEs()
 		Local $localDir = $appDir & "\" & $appName & ".local"
 		Local $dllPath = $localDir & "\wintrust.dll"
 
-		LogWrite(1, "- Processing: " & $app)
+		LogWrite(1, "- 处理: " & $app)
 
 		If Not FileExists($dllPath) Then
-			MemoWrite("No wintrust.dll found at: " & $dllPath & " - Skipping.")
-			LogWrite(1, "No wintrust.dll found at: " & $dllPath & " - Skipping.")
+			MemoWrite("未找到 wintrust.dll: " & $dllPath & " - 跳过.")
+			LogWrite(1, "未找到 wintrust.dll: " & $dllPath & " - 跳过.")
 			ContinueLoop
 		EndIf
 
 		If DirRemove($localDir, 1) Then
-			MemoWrite("Successfully untrusted: " & $appName)
-			LogWrite(1, "Successfully untrusted: " & $appName)
+			MemoWrite("还原成功: " & $appName)
+			LogWrite(1, "还原成功: " & $appName)
 			$successCount += 1
 		Else
-			MemoWrite("Failed to untrust: " & $appName)
-			LogWrite(1, "Failed to untrust: " & $appName)
+			MemoWrite("还原失败: " & $appName)
+			LogWrite(1, "还原失败: " & $appName)
 		EndIf
 	Next
 
-	MemoWrite("Untrust completed. Successfully processed " & $successCount & " of " & UBound($SelectedApps) & " application(s).")
-	LogWrite(1, "Untrust completed. Successfully processed " & $successCount & " of " & UBound($SelectedApps) & " application(s).")
+	MemoWrite("还原已完成，已处理 " & $successCount & " / " & UBound($SelectedApps) & " 个软件.")
+	LogWrite(1, "还原已完成，已处理 " & $successCount & " / " & UBound($SelectedApps) & " 个软件.")
 	ToggleLog(1)
 EndFunc   ;==>UntrustEXEs
 
 Func TrustSelectionGUI($foundFiles, $operation)
 	If Not FileExists($MyDefPath) Or Not StringInStr(FileGetAttrib($MyDefPath), "D") Then
-		MemoWrite("Error: Invalid Path: " & $MyDefPath)
-		LogWrite(1, "Error: Invalid Path: " & $MyDefPath)
+		MemoWrite("错误: 路径无效: " & $MyDefPath)
+		LogWrite(1, "错误: 路径无效: " & $MyDefPath)
 		Return ""
 	EndIf
 	If UBound($foundFiles) = 0 Then
 		_GUICtrlTab_SetCurFocus($hTab, 3)
-		MemoWrite("No applications found to " & StringLower($operation) & " at: " & $MyDefPath)
-		LogWrite(1, "No applications found to " & StringLower($operation) & " at: " & $MyDefPath)
+		MemoWrite("找不到需要 " & StringLower($operation) & " 的软件: " & $MyDefPath)
+		LogWrite(1, "找不到需要 " & StringLower($operation) & " 的软件: " & $MyDefPath)
 		ToggleLog(1)
 		Return ""
 	EndIf
@@ -3443,9 +3443,9 @@ Func TrustSelectionGUI($foundFiles, $operation)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 500) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 400) / 2
 	Local $hGUI = GUICreate($operation, 500, 400, $iPopupX, $iPopupY)
-	Local $hSelectAll = GUICtrlCreateCheckbox("Select All", 10, 10)
+	Local $hSelectAll = GUICtrlCreateCheckbox("全选", 10, 10)
 	Local $hTreeView = GUICtrlCreateTreeView(10, 40, 480, 300, BitOR($TVS_CHECKBOXES, $TVS_HASBUTTONS, $TVS_HASLINES, $TVS_LINESATROOT))
-	Local $hOkButton = GUICtrlCreateButton("OK", 200, 350, 100, 30)
+	Local $hOkButton = GUICtrlCreateButton("确定", 200, 350, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	Local $defPathClean = StringStripWS($MyDefPath, 3)
@@ -3459,11 +3459,11 @@ Func TrustSelectionGUI($foundFiles, $operation)
 	For $file In $foundFiles
 		Local $fileClean = StringRegExpReplace($file, "\\\\+", "\\")
 		Local $fileParts = StringSplit($fileClean, "\", 1)
-		Local $appName = "Unknown"
+		Local $appName = "未知"
 		If $fileParts[0] >= $defPathDepth + 1 Then
 			$appName = $fileParts[$defPathDepth + 1]
 		Else
-			LogWrite(1, "Warning: Short path used in config, using Unknown for: " & $fileClean)
+			LogWrite(1, "警告: 配置里的匹配路径不够完整，暂时归类到未知: " & $fileClean)
 		EndIf
 		If Not $appNodes.Exists($appName) Then
 			Local $hAppNode = GUICtrlCreateTreeViewItem($appName, $hTreeView)
@@ -3493,8 +3493,8 @@ Func TrustSelectionGUI($foundFiles, $operation)
 			Case $GUI_EVENT_CLOSE
 				AdlibUnRegister("CheckParentCheckboxes")
 				GUIDelete($hGUI)
-				MemoWrite(StringLower($operation) & " cancelled.")
-				LogWrite(1, StringLower($operation) & " cancelled.")
+				MemoWrite(StringLower($operation) & " 已取消.")
+				LogWrite(1, StringLower($operation) & " 已取消.")
 				Return ""
 			Case $hSelectAll
 				AdlibUnRegister("CheckParentCheckboxes")
@@ -3513,7 +3513,7 @@ Func TrustSelectionGUI($foundFiles, $operation)
 				AdlibUnRegister("CheckParentCheckboxes")
 				Local $selectedFiles[0]
 				Local $hItem = _GUICtrlTreeView_GetFirstItem($hTreeView)
-				MemoWrite("Scanning for selected items...")
+				MemoWrite("正在扫描所选项...")
 				While $hItem <> 0
 					If _GUICtrlTreeView_GetChecked($hTreeView, $hItem) Then
 						Local $itemText = _GUICtrlTreeView_GetText($hTreeView, $hItem)
@@ -3526,8 +3526,8 @@ Func TrustSelectionGUI($foundFiles, $operation)
 				_GUICtrlTab_SetCurFocus($hTab, 3)
 				GUIDelete($hGUI)
 				If UBound($selectedFiles) = 0 Then
-					MemoWrite("No files selected to " & StringLower($operation) & ".")
-					LogWrite(1, "No files selected to " & StringLower($operation) & ".")
+					MemoWrite("未选择需要进行 " & StringLower($operation) & " 的文件.")
+					LogWrite(1, "未选择需要进行 " & StringLower($operation) & " 的文件.")
 				EndIf
 				Return $selectedFiles
 			Case $GUI_EVENT_PRIMARYDOWN
@@ -3551,31 +3551,31 @@ Func ManageDevOverride()
 	Local $aMainPos = WinGetPos($MyhGUI)
 	Local $iPopupX = $aMainPos[0] + ($aMainPos[2] - 300) / 2
 	Local $iPopupY = $aMainPos[1] + ($aMainPos[3] - 150) / 2
-	Local $hGUI = GUICreate("Manage DevOverride", 300, 150, $iPopupX, $iPopupY)
+	Local $hGUI = GUICreate("配置 DevOverride", 300, 150, $iPopupX, $iPopupY)
 
 	Local $sKey = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options"
 	Local $sValueName = "DevOverrideEnable"
 	Local $sStatus
 	Local $iValue = RegRead($sKey, $sValueName)
 	If @error <> 0 Then
-		$sStatus = "Registry key not found."
+		$sStatus = "DevOverride 注册表项未找到."
 	ElseIf $iValue = 1 Then
-		$sStatus = "Registry key is enabled."
+		$sStatus = "DevOverride 注册表项已启用."
 	Else
-		$sStatus = "Registry key is disabled."
+		$sStatus = "DevOverride 注册表项已禁用."
 	EndIf
 
 	GUICtrlCreateLabel($sStatus, 10, 20, 280, 20, $SS_CENTER)
 
-	Local $hAddButton = GUICtrlCreateButton("Enable Reg Key", 50, 50, 100, 30)
-	Local $hRemoveButton = GUICtrlCreateButton("Remove Reg Key", 150, 50, 100, 30)
-	Local $hCancelButton = GUICtrlCreateButton("Cancel", 100, 100, 100, 30)
+	Local $hAddButton = GUICtrlCreateButton("启用注册表项", 50, 50, 100, 30)
+	Local $hRemoveButton = GUICtrlCreateButton("删除注册表项", 150, 50, 100, 30)
+	Local $hCancelButton = GUICtrlCreateButton("取消", 100, 100, 100, 30)
 	GUISetState(@SW_SHOW)
 
 	While 1
 		Switch GUIGetMsg()
 			Case $GUI_EVENT_CLOSE, $hCancelButton
-				MemoWrite("DevOverride registry management cancelled.")
+				MemoWrite("DevOverride 注册表配置已取消.")
 				GUIDelete($hGUI)
 				Return
 			Case $hAddButton
@@ -3595,5 +3595,5 @@ EndFunc   ;==>ManageDevOverride
 Func OpenWF()
 	Local $sWFPath = @SystemDir & "\wf.msc"
 	Run("mmc.exe " & $sWFPath)
-	ConsoleWrite("Opening Windows Firewall...")
+	ConsoleWrite("正在打开 Windows 防火墙...")
 EndFunc   ;==>OpenWF
