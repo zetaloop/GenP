@@ -1,4 +1,4 @@
-Adobe GenP v3.6.9 (Unofficial fork)
+Adobe GenP v3.7.0 (Unofficial fork)
 
 CGP Version
 
