@@ -1,7 +1,6 @@
-Adobe GenP v3.8.0 (Unofficial fork)
+Adobe GenP v4.0.0 (Unofficial fork)
 
-CGP Version
+Lemmy Community Version
 
 From:
-- https://gen.paramore.su
 - https://lemmy.dbzer0.com/c/GenP
