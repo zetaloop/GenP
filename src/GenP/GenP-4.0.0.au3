@@ -1618,10 +1618,13 @@ Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 		Else
 			$IPATH = $STARTDIR & $NEXT
 
-			; Track .bak files
-			If StringRight(StringLower($IPATH),4) = ".bak" Then
-				If _ArraySearch($FilesToRestore, $IPATH) = -1 Then _ArrayAdd($FilesToRestore, $IPATH)
-				ContinueLoop
+			; Track .bak files and mark as patched
+			If StringRight(StringLower($IPATH), 4) = ".bak" Then
+			_SetFilePatchState($IPATH, $PATCH_STATE_PATCHED) ; Mark the file as patched
+			If _ArraySearch($FilesToRestore, $IPATH) = -1 Then
+			_ArrayAdd($FilesToRestore, $IPATH)
+			EndIf
+			ContinueLoop
 			EndIf
 
 			Local $FileNameCropped, $PathToCheck
