@@ -17,12 +17,10 @@ $scriptDir = $PSScriptRoot
 $genpDir = Join-Path $scriptDir "GenP"
 $logsDir = Join-Path $scriptDir "Logs"
 $releaseDir = Join-Path $scriptDir "Release"
-$upxDir = Join-Path $scriptDir "UPX"
 $winTrustDir = Join-Path $scriptDir "WinTrust"
 $autoItZipPath = Join-Path $scriptDir "autoit-v3.zip"
 $sciTEZipPath = Join-Path $scriptDir "SciTE4AutoIt3_Portable.zip"
 $logPath = Join-Path $logsDir "build.log"
-$upxExe = Join-Path $genpDir "upx.exe"
 $winTrustDll = Join-Path $genpDir "wintrust.dll"
 
 if (-not (Test-Path $logsDir)) {
@@ -134,11 +132,6 @@ if (-not (Test-Path $genpDir)) {
     Stop-Transcript | Out-Null
     exit 1
 }
-if (-not (Test-Path $upxDir)) {
-    Write-Error "UPX directory not found at $upxDir."
-    Stop-Transcript | Out-Null
-    exit 1
-}
 if (-not (Test-Path $winTrustDir)) {
     Write-Error "WinTrust directory not found at $winTrustDir."
     Stop-Transcript | Out-Null
@@ -147,7 +140,6 @@ if (-not (Test-Path $winTrustDir)) {
 
 $hasAutoIt = Test-Path $autoItCoreExe
 $hasSciTE = Test-Path $wrapperScript
-$hasUpx = Test-Path $upxExe
 $hasWinTrust = Test-Path $winTrustDll
 $winTrustStatus = if ($hasWinTrust) {
     $hash = Get-MD5Hash $winTrustDll
@@ -158,9 +150,6 @@ $winTrustStatus = if ($hasWinTrust) {
 
 Write-Host "Starting build process..." -ForegroundColor Magenta
 
-if ($hasUpx) {
-    Write-Host " - upx.exe found in $genpDir\, skipped preparing UPX" -ForegroundColor Green
-}
 if ($hasWinTrust -and $winTrustStatus -eq "patched") {
     Write-Host " - wintrust.dll found in $genpDir\, skipped patching WinTrust" -ForegroundColor Green
 }
@@ -197,66 +186,6 @@ if (-not (Test-Path $installBaseDir)) {
     Write-Host ""
     Write-Host "Creating installation directory at $installBaseDir..." -ForegroundColor Cyan
     New-Item -Path $installBaseDir -ItemType Directory -Force | Out-Null
-}
-
-if (!$hasUpx) {
-    Write-Host ""
-    Write-Host "Preparing UPX..." -ForegroundColor Cyan
-    try {
-        $upxExtractedDir = Get-ChildItem -Path $upxDir -Directory | Where-Object { $_.Name -match '^upx-.*-win64$' } | Select-Object -First 1
-        if (-not $upxExtractedDir) {
-            $upxZip = Get-ChildItem -Path $upxDir -File | Where-Object { $_.Name -match '^upx-.*-win64\.zip$' } | Select-Object -First 1
-            if (-not $upxZip) {
-                Write-Error "No UPX extracted directory or zip file found in $upxDir."
-                Stop-Transcript | Out-Null
-                exit 1
-            }
-            Write-Host " - Extracting zip: $($upxZip.Name)"
-            
-            $tarExe = "tar.exe"
-            $extracted = $false
-            if (Get-Command $tarExe -ErrorAction SilentlyContinue) {
-                $tarOutLog = Join-Path $logsDir "tar_out.log"
-                $tarErrLog = Join-Path $logsDir "tar_err.log"
-                $process = Start-Process -FilePath $tarExe -ArgumentList "-xf `"$($upxZip.FullName)`" -C `"$upxDir`"" -Wait -PassThru -RedirectStandardOutput $tarOutLog -RedirectStandardError $tarErrLog
-                if ($process.ExitCode -eq 0) {
-                    $extracted = $true
-                }
-                else {
-                    Write-Warning "tar.exe failed to extract $($upxZip.Name). Check $tarErrLog. Falling back to Expand-Archive."
-                }
-            }
-            
-            if (-not $extracted) {
-                $unzipErrLog = Join-Path $logsDir "unzip_err.log"
-                Expand-Archive -Path $upxZip.FullName -DestinationPath $upxDir -Force -ErrorAction Stop 2> $unzipErrLog
-            }
-            
-            $upxExtractedDir = Get-ChildItem -Path $upxDir -Directory | Where-Object { $_.Name -match '^upx-.*-win64$' } | Select-Object -First 1
-            if (-not $upxExtractedDir) {
-                Write-Error "UPX extracted directory not found in $upxDir after extraction."
-                Stop-Transcript | Out-Null
-                exit 1
-            }
-        }
-        $upxExtractedDir = $upxExtractedDir.FullName
-        Write-Host " - Found UPX directory: $upxExtractedDir"
-        
-        $upxExe = Join-Path $upxExtractedDir "upx.exe"
-        if (-not (Test-Path $upxExe)) {
-            Write-Error "UPX executable not found at $upxExe."
-            Stop-Transcript | Out-Null
-            exit 1
-        }
-        
-        Copy-Item -Path $upxExe -Destination $genpDir -Force
-        Write-Host " - UPX copied to $genpDir" -ForegroundColor Green
-    }
-    catch {
-        Write-Error "Failed to prepare UPX: $_"
-        Stop-Transcript | Out-Null
-        exit 1
-    }
 }
 
 if ($hasWinTrust -and $winTrustStatus -eq "patched") {
