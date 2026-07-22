@@ -1,4 +1,4 @@
-Adobe GenP v4.0.4 (Unofficial fork)
+Adobe GenP v4.2.0 (Unofficial fork)
 
 Lemmy Community Version
 
