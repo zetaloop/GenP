@@ -2,15 +2,15 @@
 #RequireAdmin
 #Region
 #AutoIt3Wrapper_Icon=Skull.ico
-#AutoIt3Wrapper_Outfile_x64=GenP-v4.2.0.exe
+#AutoIt3Wrapper_Outfile_x64=GenP-v4.2.1.exe
 #AutoIt3Wrapper_Res_Comment=GenP
 #AutoIt3Wrapper_Res_CompanyName=GenP
 #AutoIt3Wrapper_Res_Description=GenP
-#AutoIt3Wrapper_Res_Fileversion=4.2.0
+#AutoIt3Wrapper_Res_Fileversion=4.2.1
 #AutoIt3Wrapper_Res_LegalCopyright=GenP 2026
 #AutoIt3Wrapper_Res_LegalTradeMarks=GenP 2026
 #AutoIt3Wrapper_Res_ProductName=GenP
-#AutoIt3Wrapper_Res_ProductVersion=4.2.0
+#AutoIt3Wrapper_Res_ProductVersion=4.2.1
 #AutoIt3Wrapper_Res_Field=ID|GenP-%date%-%time%
 #AutoIt3Wrapper_Run_Au3Stripper=y
 #AutoIt3Wrapper_Run_Tidy=n
@@ -47,7 +47,7 @@
 
 AutoItSetOption("GUICloseOnESC", 0)
 
-Global $g_Version = "4.2.0"
+Global $g_Version = "4.2.1"
 Global $g_AppWndTitle = "GenP v" & $g_Version
 Global $g_AppVersion = "GenP" & @CRLF & "原版作者 uncia"
 
@@ -93,6 +93,7 @@ Global $fInterrupt = 0
 Global $FilesToPatch[0][1], $FilesToPatchNull[0][1]
 Global $FilesToRestore[0][1], $fFilesListed = 0
 Global $MyhGUI, $hTab, $hMainTab, $hLogTab, $idMsg, $idListview, $g_idListview, $idButtonSearch, $idButtonStop
+Global $g_hMsgBoxHook = 0, $g_pMsgBoxCBT = 0
 Global $idButtonCustomFolder, $idBtnCure, $idBtnDeselectAll, $ListViewSelectFlag = 1
 Global $idBtnModified = 0
 Global $idBtnUpdateHosts, $idMemo, $timestamp, $idLog, $idBtnRestore, $idBtnCopyLog, $idFindACC
@@ -100,14 +101,15 @@ Global $idEnableMD5, $idOnlyAFolders, $idBtnSaveOptions, $idCustomDomainListLabe
 Global $hPopupTab, $idBtnRemoveAGS, $idBtnCleanHosts, $idBtnEditHosts, $idLabelEditHosts, $sEditHostsText, $idBtnRestoreHosts, $idBtnAutoUpdateHosts
 
 Global $g_aToolCtrls, $g_aOptCtrls, $g_aCheckCtrls, $idTriggerCaptureLaunch
-Global $idBtnProxySetup, $idBtnProxyToggleRun, $idBtnProxyToggleProxy, $idBtnProxyOpenLog, $idBtnProxyRemove
+Global $idBtnProxySetup, $idBtnProxyTargeting, $idBtnProxyStartStop, $idBtnProxyOpenLog, $idBtnProxyRemove
 Global $g_idLblProxyStatus = 0
 
-#Au3Stripper_Ignore_Variables=$g_sMITM_DIR,$g_sMITM_EXE,$g_sMITM_SCRIPT,$g_sMITM_LOG,$g_sMITM_PORT,$g_sMITM_PROXY,$g_sMITM_CERT_NAME,$g_iMitmproxyPID,$g_sOVD_EXE
+#Au3Stripper_Ignore_Variables=$g_sMITM_DIR,$g_sMITM_EXE,$g_sMITM_SCRIPT,$g_sMITM_LOG,$g_sMITM_PORT,$g_sMITM_PROXY,$g_sMITM_CERT_NAME,$g_iMitmproxyPID,$g_sOVD_DIR,$g_sOVD_EXE
 Global Const $g_sMITM_DIR = @AppDataCommonDir & "\GenP\mitmproxy"
 Global Const $g_sMITM_EXE = $g_sMITM_DIR & "\mitmdump.exe"
 Global Const $g_sMITM_SCRIPT = $g_sMITM_DIR & "\mitmproxy_genuine_fullguard.py"
-Global Const $g_sOVD_EXE = $g_sMITM_DIR & "\main.exe"
+Global Const $g_sOVD_DIR = @TempDir & "\GenP_OVD"
+Global Const $g_sOVD_EXE = $g_sOVD_DIR & "\main.exe"
 Global Const $g_sMITM_LOG = $g_sMITM_DIR & "\mitmdump.log"
 Global $g_sMITM_PORT = "8080"
 Global $g_sMITM_PROXY = "127.0.0.1:8080"
@@ -171,7 +173,7 @@ Global $g_bPendingInfoReset = False
 Global $g_bInModifiedMode = False
 Global $g_bAutoPatchPending = False
 Global $g_bAutoPatchRun = False
-
+Global $g_hBFFParent = 0
 Global $g_AppCount = 0
 Global $g_FilesToPatchCount = 0
 Global $g_dotCounter = 0
@@ -203,8 +205,8 @@ Global $g_aExpectedCounts[6][2] = [ _
 		["RuntimeInstallers", 2], _
 		["FirewallTrust", 36], _
 		["DefaultPatterns", 1], _
-		["CustomPatterns", 59], _
-		["Patches", 154]]
+		["CustomPatterns", 58], _
+		["Patches", 153]]
 
 Local $sCfgProblem = _ConfigHealthProblem()
 If $sCfgProblem <> "" Then
@@ -437,8 +439,8 @@ If FileExists(@WindowsDir & "\System32\drivers\etc\hosts.bak") Then
 EndIf
 
 If _IsMitmproxyInstalled() Then
-	GUICtrlSetState($idBtnProxyToggleRun, $GUI_ENABLE)
-	GUICtrlSetState($idBtnProxyToggleProxy, $GUI_ENABLE)
+	GUICtrlSetState($idBtnProxyTargeting, $GUI_ENABLE)
+	GUICtrlSetState($idBtnProxyStartStop, $GUI_ENABLE)
 	GUICtrlSetState($idBtnProxyOpenLog, $GUI_ENABLE)
 	GUICtrlSetState($idBtnProxyRemove, $GUI_ENABLE)
 EndIf
@@ -841,9 +843,14 @@ While 1
 
 					_GUICtrlListView_EnsureVisible($idListview, $i, 0)
 
+					If $g_bFirstFileLogGap Then
+						LogWrite(1, "")
+						$g_bFirstFileLogGap = False
+					EndIf
+
 					If _PathIsBeta($ItemFromList) Then
 						$g_bBetaPatchedThisRun = True
-						LogWrite(1, "检测到 Beta/预发布软件. 软件更新后修补可能失效，且不提供相关支持.")
+						LogWrite(1, "检测到 Beta 版软件. 软件更新后修补可能失效，且不提供相关支持.")
 					EndIf
 
 					If _PathIsLightroomCloud($ItemFromList) Then
@@ -1255,25 +1262,48 @@ While 1
 			If $bLaunchOlderVerDl Then
 				GUICtrlSetState($idOlderVerDl, $GUI_UNCHECKED)
 				_SnapshotOptions()
-				If Not FileExists($g_sMITM_DIR) Then DirCreate($g_sMITM_DIR)
+				DirRemove($g_sOVD_DIR, 1)
+				DirCreate($g_sOVD_DIR)
 				FileInstall("resources\mitmproxy\main.exe", $g_sOVD_EXE, 1)
 				If Not FileExists($g_sOVD_EXE) Then
-					MemoWrite(@CRLF & "错误: 无法提取旧版本下载工具 (main.exe).")
+					MemoWrite(@CRLF & "错误: 无法提取 GenP - Adobe 旧版本下载工具 (main.exe).")
 				Else
-					MemoWrite(@CRLF & "正在启动 MP7909 制作的旧版本下载工具.")
-					Local $iPID = Run('cmd.exe /k "title Adobe 旧版本下载工具 & color 0F & mode con cols=100 & .\main.exe"', $g_sMITM_DIR, @SW_SHOW)
-					If $iPID = 0 Then
-						MemoWrite("错误: 无法打开 main.exe 控制台 (代码 " & @error & ").")
+					Local $sInstallDir = "C:\Program Files\Adobe"
+					Local $iInstChoice = MsgBox(BitOR($MB_YESNOCANCEL, $MB_ICONQUESTION), _
+							"安装位置", _
+							"是否将下载的旧版本安装到以下默认位置?" & @CRLF & @CRLF & _
+							$sInstallDir & @CRLF & @CRLF & _
+							"是 = 使用默认位置（推荐）" & @CRLF & _
+							"否 = 选择其他位置（例如其他驱动器）" & @CRLF & _
+							"取消 = 不下载")
+					If $iInstChoice = $IDCANCEL Then
+						MemoWrite(@CRLF & "已取消下载旧版本.")
 					Else
-						Local $sIconPath = @ScriptDir & "\Skull.ico"
-						If FileExists($sIconPath) Then
-							Local $hCon = WinWait("Adobe 旧版本下载工具", "", 2)
-							If $hCon Then
-								Local $aIcon = DllCall("user32.dll", "handle", "LoadImageW", _
-										"handle", 0, "wstr", $sIconPath, "uint", 1, "int", 0, "int", 0, "uint", 0x10)
-								If Not @error And IsArray($aIcon) And $aIcon[0] Then
-									DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hCon, "uint", 0x80, "wparam", 1, "lparam", $aIcon[0])
-									DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hCon, "uint", 0x80, "wparam", 0, "lparam", $aIcon[0])
+						If $iInstChoice = $IDNO Then
+							Local $sPick = _BrowseForFolderDialog("选择 Adobe 安装位置", $MyhGUI)
+							If $sPick <> "" Then $sInstallDir = $sPick
+						EndIf
+						EnvSet("GENP_INSTALL_DIR", $sInstallDir)
+						MemoWrite(@CRLF & "安装位置: " & $sInstallDir)
+
+						Local $sOvdDest = @ScriptDir & "\Adobe Downloads"
+						EnvSet("GENP_DOWNLOADS_DIR", $sOvdDest)
+						MemoWrite(@CRLF & "正在启动 MP7909 制作的 GenP - Adobe 旧版本下载工具.")
+						MemoWrite("下载内容将保存到: " & $sOvdDest)
+						Local $iPID = Run('cmd.exe /k "title GenP - Adobe 旧版本下载工具 & color 0F & mode con cols=100 & .\main.exe"', $g_sOVD_DIR, @SW_SHOW)
+						If $iPID = 0 Then
+							MemoWrite("错误: 无法打开 main.exe 控制台 (错误代码 " & @error & ").")
+						Else
+							Local $sIconPath = @ScriptDir & "\Skull.ico"
+							If FileExists($sIconPath) Then
+								Local $hCon = WinWait("GenP - Adobe 旧版本下载工具", "", 2)
+								If $hCon Then
+									Local $aIcon = DllCall("user32.dll", "handle", "LoadImageW", _
+											"handle", 0, "wstr", $sIconPath, "uint", 1, "int", 0, "int", 0, "uint", 0x10)
+									If Not @error And IsArray($aIcon) And $aIcon[0] Then
+										DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hCon, "uint", 0x80, "wparam", 1, "lparam", $aIcon[0])
+										DllCall("user32.dll", "lresult", "SendMessageW", "hwnd", $hCon, "uint", 0x80, "wparam", 0, "lparam", $aIcon[0])
+									EndIf
 								EndIf
 							EndIf
 						EndIf
@@ -1352,15 +1382,15 @@ While 1
 		Case $idMsg = $idBtnProxySetup
 			Local $bOk = _SetupMitmproxy()
 			If $bOk Then
-				GUICtrlSetState($idBtnProxyToggleRun, $GUI_ENABLE)
-				GUICtrlSetState($idBtnProxyToggleProxy, $GUI_ENABLE)
+				GUICtrlSetState($idBtnProxyTargeting, $GUI_ENABLE)
+				GUICtrlSetState($idBtnProxyStartStop, $GUI_ENABLE)
 				GUICtrlSetState($idBtnProxyOpenLog, $GUI_ENABLE)
 				GUICtrlSetState($idBtnProxyRemove, $GUI_ENABLE)
 				MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "安装完成", _
 						"mitmproxy 已安装，证书已受信任." & @CRLF & @CRLF & _
 						"后续操作:" & @CRLF & _
-						"  - 使用“启动/停止”启动 mitmdump" & @CRLF & _
-						"  - 使用“启用/禁用代理”让 Windows 流量经过 mitmdump")
+						"  - 可在“拦截范围”中选择所有 Adobe 流量或特定软件" & @CRLF & _
+						"  - 点击“启动/停止代理”运行代理并启用 Windows 系统代理")
 			Else
 				Local $sErrMsg = "安装失败."
 				Switch @error
@@ -1384,16 +1414,23 @@ While 1
 			EndIf
 			_RefreshProxyStatus()
 
-		Case $idMsg = $idBtnProxyToggleRun
-			If _IsMitmproxyRunning() Then
+		Case $idMsg = $idBtnProxyTargeting
+			_ShowProxyTargetingDialog()
+
+		Case $idMsg = $idBtnProxyStartStop
+			If _IsMitmproxyRunning() Or _IsWindowsProxyOn() Then
+				_DisableWindowsProxy()
 				_StopMitmproxy()
-				MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "已停止", "mitmdump 已停止.")
+				MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "代理已停止", _
+					"mitmdump 已停止，Windows 系统代理已关闭.")
 			Else
 				Local $bOk = _StartMitmproxy()
 				If $bOk Then
-					MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "已启动", _
-							"mitmdump 正在监听 " & $g_sMITM_PROXY & "." & @CRLF & _
-							"使用“启用/禁用代理”让 Windows 流量经过此地址.")
+					_EnableWindowsProxy()
+					Local $sPMode = IniRead($sINIPath, "Options", "ProxyMode", "Global")
+					MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "代理已启动", _
+						"mitmdump 正在监听 " & $g_sMITM_PROXY & "，Windows 系统代理已开启." & @CRLF & @CRLF & _
+						"拦截范围: " & (StringLower($sPMode) = "target" ? "指定软件" : "所有 Adobe 流量（推荐）") & ".")
 				Else
 					Local $sErrMsg2 = "启动失败."
 					Switch @error
@@ -1401,36 +1438,14 @@ While 1
 							$sErrMsg2 = "尚未安装 mitmproxy，请先点击“安装”."
 						Case 2, 3
 							$sErrMsg2 = "mitmdump 未能正常启动." & @CRLF & _
-									"独立程序可能无法解包到 %TEMP%." & @CRLF & _
-									"请在任务管理器中检查旧的 mitmdump 进程."
+								"独立程序可能无法解包到 %TEMP%." & @CRLF & _
+								"请在任务管理器中检查残留的 mitmdump 进程."
 						Case 4
 							$sErrMsg2 = "此设备上的代理端口 8080-8089 均已占用." & @CRLF & _
-									"请关闭占用这些端口的其他代理或开发工具后重试."
+								"请关闭占用这些端口的其他代理或开发工具后重试."
 					EndSwitch
 					MsgBox(BitOR($MB_OK, $MB_ICONERROR), "启动失败", $sErrMsg2)
 				EndIf
-			EndIf
-			_RefreshProxyStatus()
-
-		Case $idMsg = $idBtnProxyToggleProxy
-			If _IsWindowsProxyOn() Then
-				_DisableWindowsProxy()
-				MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "代理已禁用", _
-						"Windows 系统代理已禁用.")
-			Else
-				If Not _IsMitmproxyRunning() Then
-					Local $iWarn = MsgBox(BitOR($MB_YESNO, $MB_ICONWARNING), "mitmdump 未运行", _
-							"是否仍要启用 Windows 代理?" & @CRLF & @CRLF & _
-							"mitmdump 当前已停止. 启用代理后，如果没有代理程序" & @CRLF & _
-							"监听对应地址，软件将无法访问互联网.")
-					If $iWarn <> $IDYES Then
-						_RefreshProxyStatus()
-						ContinueLoop
-					EndIf
-				EndIf
-				_EnableWindowsProxy()
-				MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "代理已启用", _
-						"Windows 系统代理已启用: " & $g_sMITM_PROXY & ".")
 			EndIf
 			_RefreshProxyStatus()
 
@@ -1441,20 +1456,20 @@ While 1
 			If MsgBox(BitOR($MB_YESNO, $MB_ICONWARNING), "卸载 mitmproxy", _
 					"此操作将:" & @CRLF & _
 					"  - 停止正在运行的 mitmdump" & @CRLF & _
-					"  - 禁用 Windows 系统代理" & @CRLF & _
+					"  - 关闭 Windows 系统代理" & @CRLF & _
 					"  - 卸载受信任的证书" & @CRLF & _
 					"  - 删除 " & $g_sMITM_DIR & @CRLF & @CRLF & _
-					"将保留 %USERPROFILE%\.mitmproxy\ 文件夹 (证书源文件)，" & @CRLF & _
-					"便于以后更快完成安装. 是否继续?") = $IDYES Then
+					"将保留 %USERPROFILE%\.mitmproxy\ 中的证书源文件，" & @CRLF & _
+					"以便今后更快地完成安装. 是否继续?") = $IDYES Then
 				If _RemoveMitmproxy() Then
-					GUICtrlSetState($idBtnProxyToggleRun, $GUI_DISABLE)
-					GUICtrlSetState($idBtnProxyToggleProxy, $GUI_DISABLE)
+					GUICtrlSetState($idBtnProxyTargeting, $GUI_DISABLE)
+					GUICtrlSetState($idBtnProxyStartStop, $GUI_DISABLE)
 					GUICtrlSetState($idBtnProxyOpenLog, $GUI_DISABLE)
 					GUICtrlSetState($idBtnProxyRemove, $GUI_DISABLE)
 					MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION), "已卸载", "mitmproxy 已卸载.")
 				Else
 					MsgBox(BitOR($MB_OK, $MB_ICONERROR), "卸载失败", _
-							"部分卸载操作失败 (@error=" & @error & ")，请查看 GenP 日志.")
+						"部分卸载操作失败 (@error=" & @error & ")，请查看 GenP 日志.")
 				EndIf
 			EndIf
 			_RefreshProxyStatus()
@@ -1508,6 +1523,7 @@ EndFunc
 
 Func MainGui()
 	$MyhGUI = GUICreate($g_AppWndTitle, 595, 610, -1, -1, BitOR($WS_MINIMIZEBOX, $GUI_SS_DEFAULT_GUI))
+	_MsgBoxCenterInit()
 	If FileExists(@ScriptDir & "\Skull.ico") Then GUISetIcon(@ScriptDir & "\Skull.ico", 0, $MyhGUI)
 	$hTab = GUICtrlCreateTab(0, 1, 597, 610, $TCS_FIXEDWIDTH)
 	_SendMessage(GUICtrlGetHandle($hTab), 0x1329, 0, 74)
@@ -1601,7 +1617,7 @@ Func MainGui()
 
 	$idBtnDeselectAll = GUICtrlCreateDummy()
 
-	$g_idHyperlinkMain = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkMain = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkMain, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkMain, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkMain, $GUI_BKCOLOR_TRANSPARENT)
@@ -1647,7 +1663,7 @@ Func MainGui()
 
 	GUICtrlCreateGroup("修补设置", 5, 223, 585, 115)
 
-	$idShowBetaApps = GUICtrlCreateCheckbox("显示 Beta/预发布软件", 15, 248, 275, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
+	$idShowBetaApps = GUICtrlCreateCheckbox("显示 Beta 版软件", 15, 248, 275, 25, BitOR($BS_AUTOCHECKBOX, $BS_LEFT))
 	If $bShowBetaApps = 1 Then GUICtrlSetState($idShowBetaApps, $GUI_CHECKED)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
@@ -1751,7 +1767,7 @@ Func MainGui()
 	$idLabelRuntimeInstaller = GUICtrlCreateDummy()
 	$idBtnToggleRuntimeInstaller = GUICtrlCreateDummy()
 
-	$g_idHyperlinkWT = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkWT = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkWT, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkWT, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkWT, $GUI_BKCOLOR_TRANSPARENT)
@@ -1792,7 +1808,7 @@ Func MainGui()
 
 	$idBtnHostsInfo = GUICtrlCreateDummy()
 
-	$g_idHyperlinkHosts = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkHosts = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkHosts, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkHosts, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkHosts, $GUI_BKCOLOR_TRANSPARENT)
@@ -1808,13 +1824,13 @@ Func MainGui()
 	$idBtnProxySetup = GUICtrlCreateButton("安装", 227, 90, 140, 32)
 	GUICtrlSetFont($idBtnProxySetup, 9, 400, 0, "Segoe UI")
 
-	$idBtnProxyToggleRun = GUICtrlCreateButton("启动/停止", 227, 135, 140, 32)
-	GUICtrlSetFont($idBtnProxyToggleRun, 9, 400, 0, "Segoe UI")
-	GUICtrlSetState($idBtnProxyToggleRun, $GUI_DISABLE)
+	$idBtnProxyTargeting = GUICtrlCreateButton("拦截范围", 227, 135, 140, 32)
+	GUICtrlSetFont($idBtnProxyTargeting, 9, 400, 0, "Segoe UI")
+	GUICtrlSetState($idBtnProxyTargeting, $GUI_DISABLE)
 
-	$idBtnProxyToggleProxy = GUICtrlCreateButton("启用/禁用代理", 227, 180, 140, 32)
-	GUICtrlSetFont($idBtnProxyToggleProxy, 9, 400, 0, "Segoe UI")
-	GUICtrlSetState($idBtnProxyToggleProxy, $GUI_DISABLE)
+	$idBtnProxyStartStop = GUICtrlCreateButton("启动/停止代理", 227, 180, 140, 32)
+	GUICtrlSetFont($idBtnProxyStartStop, 9, 400, 0, "Segoe UI")
+	GUICtrlSetState($idBtnProxyStartStop, $GUI_DISABLE)
 
 	$idBtnProxyOpenLog = GUICtrlCreateButton("打开日志", 227, 225, 140, 32)
 	GUICtrlSetFont($idBtnProxyOpenLog, 9, 400, 0, "Segoe UI")
@@ -1831,13 +1847,13 @@ Func MainGui()
 	GUICtrlCreateLabel( _
 			"使用 mitmproxy 拦截并屏蔽 Adobe 心跳通信." & @CRLF & @CRLF & _
 			"“安装”会部署 mitmproxy 并信任其证书." & @CRLF & @CRLF & _
-			"“启动/停止”控制 mitmdump，“启用/禁用代理”控制 Windows 系统代理." & @CRLF & @CRLF & _
+			"“启动/停止代理”用于运行代理；“拦截范围”可选择拦截所有 Adobe 流量或指定软件." & @CRLF & @CRLF & _
 			"“打开日志”可查看活动记录，“卸载”会移除相关内容." & @CRLF & @CRLF & _
 			"鸣谢 MP7909.", _
 			(595 - 580) / 2, 410, 580, 160, $SS_CENTER)
 	GUICtrlSetFont(-1, 9, 400, 0, "Segoe UI")
 
-	$g_idHyperlinkProxy = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkProxy = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkProxy, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkProxy, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkProxy, $GUI_BKCOLOR_TRANSPARENT)
@@ -1875,7 +1891,7 @@ Func MainGui()
 
 	$idBtnFirewallInfo = GUICtrlCreateDummy()
 
-	$g_idHyperlinkFW = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkFW = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkFW, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkFW, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkFW, $GUI_BKCOLOR_TRANSPARENT)
@@ -1909,7 +1925,7 @@ Func MainGui()
 
 	$idBtnAGSInfo = GUICtrlCreateDummy()
 
-	$g_idHyperlinkAGS = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkAGS = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkAGS, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkAGS, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkAGS, $GUI_BKCOLOR_TRANSPARENT)
@@ -1933,7 +1949,7 @@ Func MainGui()
 	GUICtrlSetImage(-1, "imageres.dll", -77, 0)
 	GUICtrlSetResizing(-1, $GUI_DOCKAUTO)
 
-	$g_idHyperlinkLog = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 575, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
+	$g_idHyperlinkLog = GUICtrlCreateLabel("GenP 维基与指南", (595 - 160) / 2, 580, 160, 24, BitOR($SS_CENTER, $SS_NOTIFY))
 	GUICtrlSetFont($g_idHyperlinkLog, 9, 400, 0, "Segoe UI")
 	GUICtrlSetColor($g_idHyperlinkLog, 0x000000)
 	GUICtrlSetBkColor($g_idHyperlinkLog, $GUI_BKCOLOR_TRANSPARENT)
@@ -1975,6 +1991,28 @@ Func MainGui()
 	EndIf
 
 	_RefreshProxyStatus()
+EndFunc
+
+Func _MsgBoxCenterInit()
+	$g_pMsgBoxCBT = DllCallbackRegister("_MsgBoxCBTProc", "long", "int;wparam;lparam")
+	Local $aTID = DllCall("kernel32.dll", "dword", "GetCurrentThreadId")
+	Local $aHook = DllCall("user32.dll", "handle", "SetWindowsHookEx", _
+		"int", 5, "ptr", DllCallbackGetPtr($g_pMsgBoxCBT), "ptr", 0, "dword", $aTID[0])
+	If IsArray($aHook) Then $g_hMsgBoxHook = $aHook[0]
+EndFunc
+
+Func _MsgBoxCBTProc($nCode, $wParam, $lParam)
+	If $nCode = 5 Then
+		Local $aCls = DllCall("user32.dll", "int", "GetClassName", "hwnd", $wParam, "wstr", "", "int", 256)
+		If IsArray($aCls) And $aCls[2] = "#32770" Then
+			Local $aBox = WinGetPos($wParam), $aPar = WinGetPos($MyhGUI)
+			If IsArray($aBox) And IsArray($aPar) Then _
+				WinMove($wParam, "", $aPar[0] + ($aPar[2] - $aBox[2]) / 2, $aPar[1] + ($aPar[3] - $aBox[3]) / 2)
+		EndIf
+	EndIf
+	Local $aRet = DllCall("user32.dll", "lresult", "CallNextHookEx", "handle", $g_hMsgBoxHook, _
+		"int", $nCode, "wparam", $wParam, "lparam", $lParam)
+	Return $aRet[0]
 EndFunc
 
 Func _CcxExtDir()
@@ -2117,6 +2155,7 @@ Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 		$isDir = StringInStr(FileGetAttrib($STARTDIR & $NEXT), "D")
 
 		If $isDir Then
+			If StringInStr($NEXT, "(Prerelease)") Then ContinueLoop
 			If StringRegExp($NEXT, "(?i)^com\.adobe\.ccx\.start-.*\.orig$") Then ContinueLoop
 			Local $targetDepth
 			$targetDepth = RecursiveFileSearch($STARTDIR & $NEXT, $DEPTH + 1, $FileCount)
@@ -2179,6 +2218,7 @@ Func RecursiveFileSearch($INSTARTDIR, $DEPTH, $FileCount)
 EndFunc
 
 Func _StoreFileInMaster($sPath)
+	If StringInStr($sPath, "(Prerelease)") Then Return
 	Local $sFileName = StringRegExpReplace($sPath, "^.*\\", "")
 	Local $sFileNameLC = StringLower($sFileName)
 
@@ -2197,7 +2237,7 @@ Func _StoreFileInMaster($sPath)
 
 	Local $bIsACC = StringInStr($sPathLC, "\common files\adobe\") > 0
 
-	Local $bIsBeta = (StringInStr($sPath, "(Beta)") > 0) Or (StringInStr($sPath, " Beta\") > 0) Or (StringInStr($sPathLC, "\adobe animate beta") > 0) Or (StringInStr($sPath, "(Prerelease)") > 0)
+	Local $bIsBeta = (StringInStr($sPath, "(Beta)") > 0) Or (StringInStr($sPath, " Beta\") > 0) Or (StringInStr($sPathLC, "\adobe animate beta") > 0)
 
 	Local $bReqGood1 = (StringInStr($g_sRequiresGood1Files, "|" & $sFileNameLC & "|") > 0)
 
@@ -2698,7 +2738,7 @@ Func _PrecacheDisplayAssets()
 	Local $hFontCacheLayoutContext = GUICreate("欢迎", $iGuiWidth, 315, -1, -1, BitOR(0x80000000, 0x00800000))
 	GUISetBkColor(0xF5F5F5, $hFontCacheLayoutContext)
 
-	GUICtrlCreateLabel("欢迎使用 GenP v4.2.0", 0, 25, $iGuiWidth, 20, 1)
+	GUICtrlCreateLabel("欢迎使用 GenP v4.2.1", 0, 25, $iGuiWidth, 20, 1)
 	GUICtrlSetFont(-1, 10, 700, 0, "Segoe UI")
 
 	GUICtrlCreateLabel("原版作者 uncia", 0, 48, $iGuiWidth, 20, 1)
@@ -2832,8 +2872,8 @@ Func FillListViewWithInfo()
 	_GUICtrlListView_AddColumn($g_idListview, "", 0)
 	_GUICtrlListView_AddColumn($g_idListview, "", 571, 2)
 
-	Local $sTitle = "GenP v4.2.0", $sOptionsLine = ""
-	If Number($bShowBetaApps) Then $sOptionsLine &= "包含 Beta/预发布软件"
+	Local $sTitle = "GenP v4.2.1", $sOptionsLine = ""
+	If Number($bShowBetaApps) Then $sOptionsLine &= "包含 Beta 版软件"
 	If Number($bEnableGood1) Then
 		$sOptionsLine &= ($sOptionsLine <> "" ? " / " : "") & "已启用 Good 修补"
 	EndIf
@@ -3039,7 +3079,7 @@ EndFunc
 
 Func _PathIsBeta($sPath)
 	Local $sPathLC = StringLower($sPath)
-	Return (StringInStr($sPath, "(Beta)") > 0) Or (StringInStr($sPath, " Beta\") > 0) Or (StringInStr($sPathLC, "\adobe animate beta") > 0) Or (StringInStr($sPath, "(Prerelease)") > 0)
+	Return (StringInStr($sPath, "(Beta)") > 0) Or (StringInStr($sPath, " Beta\") > 0) Or (StringInStr($sPathLC, "\adobe animate beta") > 0)
 EndFunc
 
 Func _PathIsLightroomCloud($sPath)
@@ -3055,16 +3095,16 @@ Func _LogBetaRunNotice()
 	LogWrite(1, @CRLF & "======================" & @CRLF & _
 			"已安装测试版软件" & @CRLF & _
 			"======================" & @CRLF & @CRLF & _
-			"Beta/预发布版仍在测试中，更新或服务端改动都可能使其失效。" & @CRLF & @CRLF & _
+			"Beta 版仍在测试中，更新或服务端改动都可能使其失效。" & @CRLF & @CRLF & _
 			"不为这些不稳定版本提供帮助或社区支持。")
 	$g_bBetaPatchedThisRun = False
 EndFunc
 
 Func _LogLightroomCloudNotice()
 	If Not $g_bLightroomCloudThisRun Then Return
-	LogWrite(1, @CRLF & "=========================" & @CRLF & _
+	LogWrite(1, @CRLF & "========================" & @CRLF & _
 			"已安装 LIGHTROOM CC" & @CRLF & _
-			"=========================" & @CRLF & @CRLF & _
+			"========================" & @CRLF & @CRLF & _
 			"云端版 Lightroom 依赖 Adobe 服务器，修补后往往无法稳定运行；部分功能可能不可用，软件甚至可能无法启动。" & @CRLF & @CRLF & _
 			"GenP 只能修改本地文件，无法改变 Adobe 服务器端的行为，因此这个版本可能随时失效。" & @CRLF & @CRLF & _
 			"建议改用完全在本地运行的 Lightroom Classic，稳定性和兼容性更好。")
@@ -3564,13 +3604,10 @@ Func _PrettifyScanDir($sDir)
 	Local $aMatch = StringRegExp($sDir, "(?i)\\Adobe\\([^\\]+)", 1)
 	If Not @error Then
 		Local $sLabel = StringRegExpReplace($aMatch[0], "(?i)^Adobe\s+", "")
-		$sLabel = StringRegExpReplace($sLabel, "(?i)\s*(\(Beta\)|Beta)$", "（测试版）")
-		$sLabel = StringRegExpReplace($sLabel, "(?i)\s*(\(Prerelease\)|Prerelease)$", "（预发布版）")
-		If StringInStr($sDir, "Beta") And Not StringInStr($sLabel, "测试版") Then
-			$sLabel = StringStripWS($sLabel, 3) & "（测试版）"
-		ElseIf StringInStr($sDir, "Prerelease") And Not StringInStr($sLabel, "预发布版") Then
-			$sLabel = StringStripWS($sLabel, 3) & "（预发布版）"
+		If StringInStr($sDir, "Beta") And Not StringInStr($sLabel, "Beta") Then
+			$sLabel = StringStripWS($sLabel, 3) & " (Beta)"
 		EndIf
+		$sLabel = StringRegExpReplace($sLabel, "(?i)\s*(\(Beta\)|Beta)$", "（测试版）")
 		Return $sLabel
 	EndIf
 	Local $sLeaf = StringRegExpReplace($sDir, "^.*\\", "")
@@ -3644,15 +3681,38 @@ Func _UpdateStatusDetail($sDetail)
 EndFunc
 
 Func _BrowseForFolderDialog($sTitle, $hParent = 0)
-	Local $oShell = ObjCreate("Shell.Application")
-	If IsObj($oShell) Then
-		Local $oFolder = $oShell.BrowseForFolder($hParent, $sTitle, 0, 17)
-		If IsObj($oFolder) Then Return $oFolder.Self.Path
-		Return ""
+	$g_hBFFParent = $hParent
+	Local $tTitle = DllStructCreate("wchar[" & StringLen($sTitle) + 1 & "]")
+	DllStructSetData($tTitle, 1, $sTitle)
+	Local $tDisp = DllStructCreate("wchar[260]")
+	Local $tBI = DllStructCreate("hwnd hwndOwner;ptr pidlRoot;ptr pszDisplayName;ptr lpszTitle;uint ulFlags;ptr lpfn;lparam lParam;int iImage")
+	DllStructSetData($tBI, "hwndOwner", $hParent)
+	DllStructSetData($tBI, "pszDisplayName", DllStructGetPtr($tDisp))
+	DllStructSetData($tBI, "lpszTitle", DllStructGetPtr($tTitle))
+	DllStructSetData($tBI, "ulFlags", 0x41)
+	Local $hCb = DllCallbackRegister("_BFFCentreProc", "int", "hwnd;uint;lparam;lparam")
+	DllStructSetData($tBI, "lpfn", DllCallbackGetPtr($hCb))
+	Local $aR = DllCall("shell32.dll", "ptr", "SHBrowseForFolderW", "struct*", $tBI)
+	DllCallbackFree($hCb)
+	If Not IsArray($aR) Or $aR[0] = 0 Then Return ""
+	Local $tPath = DllStructCreate("wchar[260]")
+	DllCall("shell32.dll", "int", "SHGetPathFromIDListW", "ptr", $aR[0], "struct*", $tPath)
+	DllCall("ole32.dll", "none", "CoTaskMemFree", "ptr", $aR[0])
+	Return DllStructGetData($tPath, 1)
+EndFunc
+
+Func _BFFCentreProc($hWnd, $uMsg, $lParam, $lpData)
+	If $uMsg = 1 Then
+		Local $aW = WinGetPos($hWnd), $aP = WinGetPos($g_hBFFParent)
+		If IsArray($aW) And IsArray($aP) Then _
+			WinMove($hWnd, "", $aP[0] + ($aP[2] - $aW[2]) / 2, $aP[1] + ($aP[3] - $aW[3]) / 2)
 	EndIf
-	Local $sResult = FileSelectFolder($sTitle, "", 0, @HomeDrive & "\", $hParent)
-	If @error Then Return ""
-	Return $sResult
+	Return 0
+EndFunc
+
+Func _CentreGui($hGui, $iW, $iH)
+	Local $aP = WinGetPos($MyhGUI)
+	If IsArray($aP) Then WinMove($hGui, "", $aP[0] + ($aP[2] - $iW) / 2, $aP[1] + ($aP[3] - $iH) / 2)
 EndFunc
 
 Func MyFileOpenDialog()
@@ -3720,10 +3780,6 @@ Func MyGlobalPatternSearch($MyFileToParse)
 	Local $sExt = StringRegExpReplace($sFileName, "^.*\.", "")
 	Local $sLogSuffix = " - 使用默认/自定义特征"
 	MemoWrite(@CRLF & $MyFileToParse & @CRLF & "---" & @CRLF & "分析中" & @CRLF & "---" & @CRLF & "*****")
-	If $g_bFirstFileLogGap Then
-		LogWrite(1, "")
-		$g_bFirstFileLogGap = False
-	EndIf
 	LogWrite(1, "正在检查文件: " & $sFileName & $sLogSuffix)
 	If StringLower($sFileName) = "runtimeinstaller.dll" Then
 		If Not _AutoUnpackIfRuntimeInstaller($MyFileToParse) Then
@@ -5150,7 +5206,6 @@ Func _BuildAdobeWebViewTokens()
 			Local $iDot = StringInStr($sName, ".")
 			If $iDot > 0 Then $sName = StringLeft($sName, $iDot - 1)
 			$sName = StringRegExpReplace($sName, "\(beta\)", "")
-			$sName = StringRegExpReplace($sName, "(?i)\(prerelease\)", "")
 			$sName = StringStripWS($sName, 3)
 			If StringLeft($sName, 6) = "adobe " Then $sName = StringTrimLeft($sName, 6)
 			Local $aM = StringRegExp($sName, "^([a-z]+)", 1)
@@ -5251,7 +5306,14 @@ Func _CreateInitialPatchStates()
 
 	MemoWrite(@CRLF & "第 1/2 阶段: 正在将已修补文件还原为原始状态 (找到 " & $iTotal & " 个)...")
 	LogWrite(1, "新建 patch_states.ini: 正在开始还原阶段...")
-	Local $iRestored = 0, $iRestoreFailed = 0
+	Local $iRestored = 0, $iRestoreFailed = 0, $iRestoreStale = 0
+
+	Local $bWeStartedCrypt = False
+	If Not $g_bCryptActive Then
+		_Crypt_Startup()
+		$g_bCryptActive = True
+		$bWeStartedCrypt = True
+	EndIf
 
 	For $i = 0 To $iTotal - 1
 		Local $sPath = $g_aAllFiles[$i][0]
@@ -5265,6 +5327,39 @@ Func _CreateInitialPatchStates()
 			Sleep(100)
 		EndIf
 
+		Local $sStaleWhy = ""
+		Local $sExtLC = StringLower(StringRegExpReplace($sPath, "^.*\.", ""))
+		If FileExists($sPath) And $sExtLC <> "js" And $sExtLC <> "json" Then
+			Local $sVerBak = FileGetVersion($sBakR)
+			If @error Or $sVerBak = "" Then $sVerBak = FileGetVersion($sBakR, $FV_PRODUCTVERSION)
+			Local $sVerLive = FileGetVersion($sPath)
+			If @error Or $sVerLive = "" Then $sVerLive = FileGetVersion($sPath, $FV_PRODUCTVERSION)
+			If $sVerBak <> "" And $sVerLive <> "" And $sVerBak <> $sVerLive Then
+				$sStaleWhy = "版本 " & $sVerBak & " -> " & $sVerLive
+			EndIf
+
+			If $sStaleWhy = "" And FileGetSize($sBakR) <> FileGetSize($sPath) Then
+				$sStaleWhy = "文件大小不一致"
+			EndIf
+
+			If $sStaleWhy = "" Then
+				Local $sRecOrig  = IniRead($patchStatesINI, "MD5_Original", $sPath, "")
+				Local $sRecPatch = IniRead($patchStatesINI, "MD5_Patched",  $sPath, "")
+				If $sRecOrig <> "" Or $sRecPatch <> "" Then
+					Local $sLiveNow = StringLower(StringTrimLeft(String(_Crypt_HashFile($sPath, $CALG_MD5)), 2))
+					If $sLiveNow <> "" And $sLiveNow <> $sRecOrig And $sLiveNow <> $sRecPatch Then
+						$sStaleWhy = "MD5 与记录的原始值和修补值均不一致"
+					EndIf
+				EndIf
+			EndIf
+		EndIf
+
+		If $sStaleWhy <> "" Then
+			FileDelete($sBakR)
+			$iRestoreStale += 1
+			LogWrite(1, "跳过还原: 已删除旧版本遗留的 .bak 备份，原因: " & $sStaleWhy & "，对应文件: " & $sPath)
+			ContinueLoop
+		EndIf
 		If FileMove($sBakR, $sPath, $FC_OVERWRITE) Then
 			$iRestored += 1
 		Else
@@ -5277,15 +5372,8 @@ Func _CreateInitialPatchStates()
 		EndIf
 	Next
 
-	LogWrite(1, "还原阶段: 已还原 " & $iRestored & " 个，失败 " & $iRestoreFailed & " 个.")
+	LogWrite(1, "还原阶段: 已还原 " & $iRestored & " 个，因备份过期跳过 " & $iRestoreStale & " 个，失败 " & $iRestoreFailed & " 个.")
 	MemoWrite("还原完成: " & $iRestored & " 个文件已恢复原始状态.")
-
-	Local $bWeStartedCrypt = False
-	If Not $g_bCryptActive Then
-		_Crypt_Startup()
-		$g_bCryptActive = True
-		$bWeStartedCrypt = True
-	EndIf
 
 	Local $mStatus   = ObjCreate("Scripting.Dictionary")
 	Local $mOrig     = ObjCreate("Scripting.Dictionary")
@@ -5606,44 +5694,35 @@ EndFunc
 Func _PatchAdobeUXPComponent($sFilePath)
 	Local $sFileName = StringLower(StringRegExpReplace($sFilePath, "^.*\\", ""))
 	Local $bIsPremierePath = (StringInStr($sFilePath, "Premiere Pro") > 0)
-
 	If $sFileName = "manifest.json" Then
 		If Not $bIsPremierePath Then
 			Return _RestoreManifestJsonIfBackupExists($sFilePath)
 		EndIf
 	EndIf
-
 	If $bIsPremierePath And StringRight($sFileName, 3) = ".js" Then Return 0
-
 	Local $hFile = FileOpen($sFilePath, 16)
 	If $hFile = -1 Then Return 0
 	Local $bData = FileRead($hFile)
 	FileClose($hFile)
 	If BinaryLen($bData) = 0 Then Return 0
-
 	Local $bIsJs = StringRegExp($sFileName, "(?i)\.js$")
 	Local $bIsJson = StringRegExp($sFileName, "(?i)\.json$")
 	Local $sData = BinaryToString($bData, 1)
 	Local $iApplied = 0
 	Local $iAlready = 0
 	Local $iTotal = 0
-
 	If $bIsJson And $bIsPremierePath Then
 		$iTotal += 1
 		Local $sBefore = $sData
-
 		$sData = StringRegExpReplace($sData, '(?i)"version"\s*:\s*"(\d+)\.([^"]+)"', '"version": "99.$2"')
-
 		If $sData <> $sBefore Then
 			$iApplied += 1
 		ElseIf StringInStr($sData, '"version": "99.') Then
 			$iAlready += 1
 		EndIf
 	EndIf
-
 	If $bIsJs Then
 		Local $sBefore
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringReplace($sData, "RelationshipProfile", "XelationshipProfile")
@@ -5652,7 +5731,6 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "XelationshipProfile") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringRegExpReplace($sData, "get chicletData\(\)\{(?!return null;)", "get chicletData(){return null;")
@@ -5661,7 +5739,6 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "get chicletData(){return null;") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringRegExpReplace($sData, "get teamTrialChicletData\(\)\{(?!return null;)", "get teamTrialChicletData(){return null;")
@@ -5670,16 +5747,14 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "get teamTrialChicletData(){return null;") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
-		$sData = StringRegExpReplace($sData, "invokeUpgradePlan\(\)\{(?!return;)", "invokeUpgradePlan(){return;")
+		$sData = StringRegExpReplace($sData, "invokeUpgradePlan\(\)\s*\{(?!\s*return;)", "invokeUpgradePlan(){return;")
 		If $sData <> $sBefore Then
 			$iApplied += 1
 		ElseIf StringInStr($sData, "invokeUpgradePlan(){return;") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringRegExpReplace($sData, "https://workflow(-stage)?\.licenses\.adobe\.com", "https://0.0.0.0")
@@ -5688,7 +5763,6 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "https://0.0.0.0") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringReplace($sData, "ENTITLEMENT_STATUS:{TRIAL:""TRIAL"",SUBSCRIPTION:""SUBSCRIPTION""", "ENTITLEMENT_STATUS:{TRIAL:""SUBSCRIPTION"",SUBSCRIPTION:""SUBSCRIPTION""")
@@ -5697,7 +5771,6 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "ENTITLEMENT_STATUS:{TRIAL:""SUBSCRIPTION""") Then
 			$iAlready += 1
 		EndIf
-
 		$iTotal += 1
 		$sBefore = $sData
 		$sData = StringReplace($sData, "setEntitlementStatus(t){e.entitlementStatus=t,", "setEntitlementStatus(t){e.entitlementStatus=""SUBSCRIPTION"",")
@@ -5706,23 +5779,34 @@ Func _PatchAdobeUXPComponent($sFilePath)
 		ElseIf StringInStr($sData, "setEntitlementStatus(t){e.entitlementStatus=""SUBSCRIPTION"",") Then
 			$iAlready += 1
 		EndIf
+		$iTotal += 1
+		$sBefore = $sData
+		$sData = StringRegExpReplace($sData, "(appEntitlementStatus:[^']*?)'DENIED'", "$1'SUBSCRIPTION'")
+		If $sData <> $sBefore Then
+			$iApplied += 1
+		ElseIf StringRegExp($sData, "appEntitlementStatus:[^']*?'SUBSCRIPTION'") Then
+			$iAlready += 1
+		EndIf
+		$iTotal += 1
+		$sBefore = $sData
+		$sData = StringReplace($sData, "return profile ? profile.appEntitlementStatus : ''", "return profile ? 'SUBSCRIPTION' : ''")
+		If $sData <> $sBefore Then
+			$iApplied += 1
+		ElseIf StringInStr($sData, "return profile ? 'SUBSCRIPTION' : ''") Then
+			$iAlready += 1
+		EndIf
 	EndIf
-
 	If $iTotal > 0 Then
 		Local $iNotApplicable = $iTotal - $iApplied - $iAlready
 	EndIf
-
 	If $iApplied = 0 Then
 		If $iAlready > 0 Then Return 2
 		Return 0
 	EndIf
-
 	FileSetAttrib($sFilePath, "-RHS")
-
 	Local $sBak = $sFilePath & ".bak"
 	If FileExists($sBak) Then
 		Local $iBakVerdict = _VerifyBackupAgainstLedger($sFilePath, $sBak)
-
 		If $iBakVerdict = 1 Then
 			FileDelete($sFilePath)
 		Else
@@ -5735,7 +5819,6 @@ Func _PatchAdobeUXPComponent($sFilePath)
 	Else
 		FileMove($sFilePath, $sBak)
 	EndIf
-
 	Local $hWrite = FileOpen($sFilePath, 18)
 	If $hWrite = -1 Then
 		LogWrite(1, "UXP 修补写入失败 (访问被拒绝?): " & $sFileName)
@@ -5937,10 +6020,6 @@ Func _NormaliseAppGroupName($sAppFolder, $sFilePath)
 	ElseIf StringRegExp($sBase, "(?i)\sBeta$") Then
 		$sBase = StringRegExpReplace($sBase, "(?i)\sBeta$", "")
 		$bIsBeta = True
-	ElseIf StringInStr($sBase, "(Prerelease)") Then
-		$sBase = StringStripWS(StringReplace($sBase, "(Prerelease)", ""), 3)
-		$bIsBeta = True
-		$sExpSuffix = "(Prerelease)"
 	EndIf
 	If Not $bIsBeta Then Return $sAppFolder
 
@@ -5968,7 +6047,7 @@ Func _NormaliseAppGroupName($sAppFolder, $sFilePath)
 	EndIf
 
 	If $sYear = "" Then Return $sAppFolder
-	Return $sBase & " " & $sYear & " (Beta)"
+	Return $sBase & " " & $sYear & " " & $sExpSuffix
 EndFunc
 
 Func _Assign_Groups_To_Found_Files()
@@ -6066,7 +6145,6 @@ Func _FindLauncherExe($sAppRoot, $sGroupName)
 
 	Local $sBase = StringRegExpReplace($sGroupName, "\s*\d{4}", "")
 	$sBase = StringRegExpReplace($sBase, "\s*\(Beta\)", "")
-	$sBase = StringRegExpReplace($sBase, "(?i)\s*\(Prerelease\)", "")
 	$sBase = StringStripWS($sBase, 3)
 
 	Local $aLaunchers[24][2] = [ _
@@ -6324,7 +6402,7 @@ Func _BuildAppsToolbar()
 		Local $iH = $iPad * 2 + $iHdr + $iBlankH + $iGap + $iMinBtnH
 
 		$g_hAppsBar = GUICreate("GenP v" & $g_Version & " 工具栏", $iW, $iH, $iX, $iY, _
-				BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_TOPMOST, $MyhGUI)
+				BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), 0)
 		If FileExists(@ScriptDir & "\Skull.ico") Then GUISetIcon(@ScriptDir & "\Skull.ico", 0, $g_hAppsBar)
 		GUICtrlCreateLabel("软件启动工具栏", $iPad, $iPad, $iW - $iPad * 2, 16)
 		GUICtrlSetFont(-1, 7, 600, 0, "Segoe UI")
@@ -6354,7 +6432,7 @@ Func _BuildAppsToolbar()
 	Local $iH = $iPad * 2 + $iHdr + $iRows * ($iBtnH + $iGap) + $iGap + $iMinBtnH
 
 	$g_hAppsBar = GUICreate("GenP v" & $g_Version & " 工具栏", $iW, $iH, $iX, $iY, _
-			BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_TOPMOST, $MyhGUI)
+			BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), BitOR($WS_EX_TOPMOST, $WS_EX_TOOLWINDOW), 0)
 	If FileExists(@ScriptDir & "\Skull.ico") Then GUISetIcon(@ScriptDir & "\Skull.ico", 0, $g_hAppsBar)
 	GUICtrlCreateLabel("打开软件 (跳过 CC 检查):", $iPad, $iPad, $iW - $iPad * 2, 16)
 	GUICtrlSetFont(-1, 7, 600, 0, "Segoe UI")
@@ -6455,6 +6533,7 @@ Func _ShowToolbarConfigDialog()
 	Local $hDlg = GUICreate("配置工具栏", $iDW, $iDH, -1, -1, _
 			BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_TOPMOST, $MyhGUI)
 	If FileExists(@ScriptDir & "\Skull.ico") Then GUISetIcon(@ScriptDir & "\Skull.ico", 0, $hDlg)
+	_CentreGui($hDlg, $iDW, $iDH)
 
 	GUICtrlCreateLabel("选择要在工具栏中显示的软件，最多 10 个:", 10, 10, $iDW - 20, 30)
 	GUICtrlSetFont(-1, 7, 600, 0, "Segoe UI")
@@ -8107,6 +8186,8 @@ Func _StartMitmproxy()
 	$g_sMITM_PROXY = "127.0.0.1:" & $g_sMITM_PORT
 
 	EnvSet("PYTHONUNBUFFERED", "1")
+	EnvSet("GENP_PROXYMODE", IniRead($sINIPath, "Options", "ProxyMode", "Global"))
+	EnvSet("GENP_PROXYAPPS", IniRead($sINIPath, "Options", "ProxyApps", "Global"))
 
 	Local $sCmd = '"' & $g_sMITM_EXE & '" -s "' & $g_sMITM_SCRIPT & '"' & _
 			' --listen-port ' & $g_sMITM_PORT & _
@@ -8190,6 +8271,110 @@ Func _RemoveMitmproxy()
 	If FileExists($sGenPDataDir) Then DirRemove($sGenPDataDir, 1)
 
 	Return True
+EndFunc
+
+Func _ShowProxyTargetingDialog()
+	Local $aApps = _DiscoverAdobeApps()
+	If UBound($aApps) = 0 Then $aApps = _ProxyScanPathApps()
+	Local $iAppCount = UBound($aApps)
+
+	Local $sCurMode = IniRead($sINIPath, "Options", "ProxyMode", "Global")
+	Local $sCurApps = IniRead($sINIPath, "Options", "ProxyApps", "Global")
+	Local $bTargeted = (StringLower(StringStripWS($sCurMode, 3)) = "target")
+
+	Local $iDW = 300, $iListH = 190
+	Local $iDH = 56 + $iListH + 14 + 26 + 12
+	Local $hDlg = GUICreate("拦截范围", $iDW, $iDH, -1, -1, _
+		BitOR($WS_CAPTION, $WS_POPUP, $WS_SYSMENU), $WS_EX_TOPMOST, $MyhGUI)
+	If FileExists(@ScriptDir & "\Skull.ico") Then GUISetIcon(@ScriptDir & "\Skull.ico", 0, $hDlg)
+	_CentreGui($hDlg, $iDW, $iDH)
+
+	Local $idRadGen = GUICtrlCreateRadio("所有 Adobe 流量（推荐）", 12, 10, $iDW - 24, 18)
+	Local $idRadTgt = GUICtrlCreateRadio("仅所选软件（最多 4 个）", 12, 30, $iDW - 24, 18)
+	If $bTargeted Then
+		GUICtrlSetState($idRadTgt, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($idRadGen, $GUI_CHECKED)
+	EndIf
+
+	Local $idLV = GUICtrlCreateListView("", 12, 56, $iDW - 24, $iListH, _
+		BitOR($LVS_REPORT, $LVS_NOCOLUMNHEADER, $LVS_SHOWSELALWAYS))
+	Local $hLV = GUICtrlGetHandle($idLV)
+	_GUICtrlListView_SetExtendedListViewStyle($hLV, BitOR($LVS_EX_CHECKBOXES, $LVS_EX_FULLROWSELECT))
+	_GUICtrlListView_AddColumn($hLV, "", $iDW - 46)
+
+	Local $sCurNorm = "," & StringLower(StringReplace($sCurApps, " ", "")) & ","
+	For $i = 0 To $iAppCount - 1
+		_GUICtrlListView_AddItem($hLV, $aApps[$i][0])
+		If $bTargeted And StringInStr($sCurNorm, "," & StringLower(StringReplace($aApps[$i][0], " ", "")) & ",") Then _
+			_GUICtrlListView_SetItemChecked($hLV, $i, True)
+	Next
+	If Not $bTargeted Then GUICtrlSetState($idLV, $GUI_DISABLE)
+	If $iAppCount = 0 Then GUICtrlSetState($idRadTgt, $GUI_DISABLE)
+
+	Local $iBtnY = 56 + $iListH + 14
+	Local $iBW = Int(($iDW - 36) / 2)
+	Local $idSave   = GUICtrlCreateButton("保存", 12, $iBtnY, $iBW, 26)
+	Local $idCancel = GUICtrlCreateButton("取消", 24 + $iBW, $iBtnY, $iBW, 26)
+
+	GUISetState(@SW_SHOW, $hDlg)
+
+	While True
+		Local $aMsg = GUIGetMsg(1)
+		Local $iM = $aMsg[0]
+		If ($iM = $GUI_EVENT_CLOSE And $aMsg[1] = $hDlg) Or $iM = $idCancel Then ExitLoop
+		If $iM = $idRadGen Then GUICtrlSetState($idLV, $GUI_DISABLE)
+		If $iM = $idRadTgt Then GUICtrlSetState($idLV, $GUI_ENABLE)
+		If $iM = $idSave Then
+			Local $sMode = "Global", $sApps = "Global", $iN = 0
+			If BitAND(GUICtrlRead($idRadTgt), $GUI_CHECKED) Then
+				Local $sList = ""
+				For $i = 0 To $iAppCount - 1
+					If _GUICtrlListView_GetItemChecked($hLV, $i) Then
+						$sList &= ($sList = "" ? "" : ", ") & $aApps[$i][0]
+						$iN += 1
+					EndIf
+				Next
+				If $iN >= 1 And $iN <= 4 Then
+					$sMode = "Target"
+					$sApps = $sList
+				EndIf
+			EndIf
+			IniWrite($sINIPath, "Options", "ProxyMode", $sMode)
+			IniWrite($sINIPath, "Options", "ProxyApps", $sApps)
+			GUIDelete($hDlg)
+			Local $sBody = "已保存." & @CRLF & @CRLF & _
+				"拦截范围: " & ($sMode = "Target" ? "指定软件（" & $sApps & "）" : "所有 Adobe 流量（推荐）") & "."
+			If $iN > 4 Then $sBody &= @CRLF & @CRLF & "已选择 " & $iN & " 个软件，超过 4 个上限，因此改用所有 Adobe 流量."
+			$sBody &= @CRLF & @CRLF & "若代理正在运行，请使用“启动/停止代理”重启代理以应用更改."
+			MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_SYSTEMMODAL), "拦截范围", $sBody)
+			Return
+		EndIf
+	WEnd
+	GUIDelete($hDlg)
+EndFunc
+
+Func _ProxyScanPathApps()
+	Local $aApps[0][2]
+	If $MyDefPath = "" Or Not FileExists($MyDefPath) Then Return $aApps
+	Local $aDirs = _FileListToArray($MyDefPath, "*", 2)
+	If @error Or Not IsArray($aDirs) Then Return $aApps
+	Local $mSeen = ObjCreate("Scripting.Dictionary")
+	For $i = 1 To $aDirs[0]
+		Local $sName = $aDirs[$i]
+		$sName = StringRegExpReplace($sName, "(?i)^Adobe\s+", "")
+		$sName = StringRegExpReplace($sName, "\s*\d{4}.*$", "")
+		$sName = StringRegExpReplace($sName, "(?i)\s*\(Beta\).*$|\s*Beta$", "")
+		$sName = StringStripWS($sName, 3)
+		If $sName = "" Then ContinueLoop
+		If $mSeen.Exists(StringLower($sName)) Then ContinueLoop
+		$mSeen.Item(StringLower($sName)) = 1
+		Local $iN = UBound($aApps)
+		ReDim $aApps[$iN + 1][2]
+		$aApps[$iN][0] = $sName
+		$aApps[$iN][1] = ""
+	Next
+	Return $aApps
 EndFunc
 
 Func _GetMitmproxyStatusText()
@@ -8280,7 +8465,7 @@ Func _CreateMitmproxyLogWindow()
 
 	_AppendToLogWindow("# GenP 心跳请求拦截 - 实时日志" & @CRLF)
 	_AppendToLogWindow("# 本窗口实时显示 mitmdump 的标准输出和错误输出。" & @CRLF)
-	_AppendToLogWindow("# 点击“启动/停止”启动 mitmdump 后开始显示输出。" & @CRLF & @CRLF)
+	_AppendToLogWindow("# 点击“启动/停止代理”后开始显示输出。" & @CRLF & @CRLF)
 EndFunc
 
 Func _OpenMitmproxyLogWindow()
@@ -8427,6 +8612,7 @@ Func _GenP_WM_CLOSE($hWnd, $iMsg, $wParam, $lParam)
 		Return 0
 	EndIf
 	If FileExists($g_sOVD_EXE) Then FileDelete($g_sOVD_EXE)
+	If FileExists($g_sOVD_DIR) Then DirRemove($g_sOVD_DIR, 1)
 	If $g_hAppsBar <> 0 Then
 		Local $aBarPos = WinGetPos($g_hAppsBar)
 		If IsArray($aBarPos) Then

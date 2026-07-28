@@ -1,6 +1,6 @@
 GenP 非官方汉化
 
-v4.2.0
+v4.2.1
 
 下载 -> [GitHub 发行版](https://github.com/zetaloop/GenP/releases)
 
